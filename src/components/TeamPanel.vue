@@ -1,5 +1,5 @@
 <template>
-	<div class="hello">
+	<div class="teamPanel">
 		<h1>TeamList</h1>
 		<ul class="teamsList">
 			<li v-for="team in teams" class="teamItem" v-bind:class="{ ready: team.ready }">
@@ -12,7 +12,6 @@
 		<form v-on:submit.prevent="addTeam">
 			<input type="text" v-model="teamData.name" placeholder="Team Name" />
 			<input type="text" v-model="teamData.emails" placeholder="Email(s)" />
-			<input type="checkbox" v-model="teamData.ready" />
 			<button type="submit">Add</button>
 		</form>
 	</div>
@@ -56,7 +55,7 @@ export default {
 	list-style:none;
 	margin:0px auto;
 	padding:0px;
-	width:500px;
+	width:100%;
 }
 .teamItem{
 	display:flex;

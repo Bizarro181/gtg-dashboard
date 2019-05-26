@@ -11,11 +11,14 @@ const firebaseApp = firebase.initializeApp({
     appId: "1:836676229202:web:ab9b57ce925fbeea"
 });
 
-const db = firebaseApp.firestore();
+const firestore = firebaseApp.firestore();
 
-const gamesCollection = db.collection( 'games' );
+const gamesCollection = firestore.collection( 'games' );
+const teamsCollection = firestore.collection( 'teams' );
 
 export{
-	db,
-	gamesCollection
+	firebase,
+	firestore,
+	gamesCollection,
+	teamsCollection
 };

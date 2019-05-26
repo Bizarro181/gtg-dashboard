@@ -71,8 +71,19 @@ export default new Vuex.Store({
 		addGame( context, game ) {
 			fb.gamesCollection.add( game ).then( (docRef) => {
 				game.id = docRef.id;
+				// game.created = fb.firestore.FieldValue.serverTimestamp()
 				context.commit( 'addGame', game );
 			});
+		},
+		createTeam( context, team ) {
+			// Modify the object before updating to the DB
+			team.created = fb.firebase.firestore.Timestamp.now();
+			fb.teamsCollection.add( team ).then( (docRef) => {
+				// Modify the obejct before adding to the store
+				team.id = docRef.id;
+				team.ready = false;
+				context.commit( 'addTeam', team );
+			})
 		}
 	},
 	mutations: {
