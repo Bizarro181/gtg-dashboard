@@ -46,6 +46,31 @@ export default new Vuex.Store({
 				}
 				return 0;
 			});
+		},
+		activeGamesInOrder( state, getters ) {
+			return getters.gamesInOrder.filter(( game ) => {
+				return game.active == true;
+			});
+		},
+		activeEmptyGamesInOrder( state, getters ) {
+			return getters.activeGamesInOrder.filter(( game ) => {
+				return game.teamNext == '';
+			});
+		},
+		readyTeams( state, getters ) {
+			return state.teams.filter(( team ) => {
+				return team.ready == true;
+			});
+		},
+		newTeams( state, getters ) {
+			return getters.readyTeams.filter(( team ) => {
+				return team.gameCurrent == '';
+			});
+		},
+		rotatingTeams( state, getters ) {
+			return getters.readyTeams.filter(( team ) => {
+				return team.gameCurrent !== '';
+			});
 		}
 	},
 	actions:{
@@ -55,6 +80,8 @@ export default new Vuex.Store({
 				querySnapshot.forEach( doc => {
 					let game = doc.data();
 					game.id = doc.id;
+					game.teamCurrent = '';
+					game.teamNext = '';
 					games.push( game );
 				});
 				context.commit( 'setGames', games );
@@ -71,6 +98,7 @@ export default new Vuex.Store({
 		addGame( context, game ) {
 			fb.gamesCollection.add( game ).then( (docRef) => {
 				game.id = docRef.id;
+				game.teamCurrent = '';
 				// game.created = fb.firestore.FieldValue.serverTimestamp()
 				context.commit( 'addGame', game );
 			});
@@ -82,8 +110,38 @@ export default new Vuex.Store({
 				// Modify the obejct before adding to the store
 				team.id = docRef.id;
 				team.ready = false;
+				team.gameStarted = '';
+				team.gameCurrent = '';
+				team.gameNext = '';
 				context.commit( 'addTeam', team );
 			})
+		},
+		startRound( context ) {
+			// Get active games and teams
+			const newTeams = context.getters.newTeams;
+			// Assign new teams to empty rooms
+			newTeams.forEach(( team ) => {
+				let games = context.getters.activeEmptyGamesInOrder;
+				context.commit( 'assignNextTeamToRoom', {
+					team: team,
+					gameNext: games[0].id
+				});
+				context.commit( 'assignRoomToTeam', {
+					game: games[0],
+					teamNext: team.id
+				});
+			});
+			
+			// Loop through teams, if they werent in a game put them in first available game
+			// const nextRoundTeams = readyTeams.map((team) => {
+			// 	// If they dont have a 
+			// 	if( team.currentGame != '' ) {
+			// 		context.state.teams.indexOf( '' );
+			// 	}
+			// });
+			// // If they were in a game, put them into the
+			// console.log( context.getters.readyTeams );
+
 		}
 	},
 	mutations: {
@@ -98,6 +156,13 @@ export default new Vuex.Store({
 		},
 		removeGame(state, index){
 			state.games.splice( index, 1 );
+		},
+		assignNextTeamToRoom( state, payload ) {
+			payload.team.gameNext = payload.gameNext;
+		},
+		assignRoomToTeam( state, payload ) {
+			payload.game.teamNext = payload.teamNext;
 		}
+
 	}
 })

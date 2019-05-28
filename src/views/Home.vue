@@ -6,6 +6,9 @@
 		<div class="main">
 			<GameGrid/>
 		</div>
+		<div class="actionBar">
+			<DashboardActions/>
+		</div>
 	</div>
 </template>
 
@@ -13,12 +16,14 @@
 // @ is an alias to /src
 import GameGrid from '@/components/GameGrid.vue'
 import TeamPanel from '@/components/TeamPanel.vue'
+import DashboardActions from '@/components/DashboardActions.vue'
 
 export default {
   name: 'home',
   components: {
     GameGrid,
-    TeamPanel
+    TeamPanel,
+    DashboardActions
   }
 };
 </script>
@@ -31,5 +36,20 @@ export default {
 }
 .sidebar{
 	width:30%;
+}
+.main{
+	width:100%;
+}
+.actionBar{
+	position:fixed;
+	bottom:0px;
+	left:0px;
+	right:0px;
+	height:60px;
+	display:flex;
+	align-items:center;
+	padding:10px;
+	background:#42b983;
+	flex-direction:flex-end;
 }
 </style>
