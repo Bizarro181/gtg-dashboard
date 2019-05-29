@@ -3,6 +3,8 @@
 		<ul class="gameGrid">
 			<li class="gameItem" v-for="game in games">
 				<p class="gameName">{{ game.name }}</p>
+				<p>Team Next: {{ game.teamNext }}</p>
+				<p>Team Current: {{ game.teamCurrent }}</p>
 			</li>
 		</ul>
 	</div>
@@ -59,6 +61,7 @@ export default {
 	border:1px solid #cacaca;
 	padding:20px;
 	margin:10px;
+	flex-wrap:wrap;
 
 	&:last-child{
 		border-bottom:1px solid #cacaca;

@@ -1,6 +1,7 @@
 <template>
 	<div class="hello">
-		<button v-on:click="startRound">Start Round</button>
+		<button class="next" v-on:click="nextRound">Next Round</button>
+		<button class="start" v-on:click="startRound">Start Round</button>
 	</div>
 </template>
 
@@ -17,6 +18,9 @@ export default {
 		}
 	},
 	methods:{
+		nextRound(){
+			this.$store.dispatch( 'nextRound' );
+		},
 		startRound(){
 			this.$store.dispatch( 'startRound' );
 		}
@@ -28,5 +32,17 @@ export default {
 <style scoped lang="scss">
 button{
 	padding:15px;
+	margin-right:20px;
+	border:none;
+	border-radius:10px;
+	font-weight:bold;
+}
+.start{
+	background:#0061ff;
+	color:white;
+}
+.next{
+	background:orange;
+	color:white;
 }
 </style>

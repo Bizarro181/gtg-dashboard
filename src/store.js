@@ -10,6 +10,8 @@ export default new Vuex.Store({
 		running: false,
 		teams:[],
 		games:[],
+		assignments:[],
+		scores:[],
 		sessionInfo:[
 			{
 				teamName: 'Robert',
@@ -116,32 +118,56 @@ export default new Vuex.Store({
 				context.commit( 'addTeam', team );
 			})
 		},
-		startRound( context ) {
+		nextRound( context ) {
 			// Get active games and teams
 			const newTeams = context.getters.newTeams;
 			// Assign new teams to empty rooms
 			newTeams.forEach(( team ) => {
 				let games = context.getters.activeEmptyGamesInOrder;
-				context.commit( 'assignNextTeamToRoom', {
+				// Assign the "first game" to the game
+				context.commit( 'assignFirstGame', {
+					team: team,
+					game: games[0].id
+				});
+				// Assign the game to the team
+				context.commit( 'assignNextTeamToGame', {
 					team: team,
 					gameNext: games[0].id
 				});
-				context.commit( 'assignRoomToTeam', {
+				// Assign the team to the game
+				context.commit( 'assignGameToTeam', {
 					game: games[0],
 					teamNext: team.id
 				});
 			});
-			
-			// Loop through teams, if they werent in a game put them in first available game
-			// const nextRoundTeams = readyTeams.map((team) => {
-			// 	// If they dont have a 
-			// 	if( team.currentGame != '' ) {
-			// 		context.state.teams.indexOf( '' );
-			// 	}
-			// });
-			// // If they were in a game, put them into the
-			// console.log( context.getters.readyTeams );
-
+			// Assign in-progress teams to next rooms
+			// get active rooms in order
+			// get active teams in order
+			// Advance teams one index
+		},
+		startRound( context ) {
+			// Get all active games w/ teams
+			const activeFilledGames = context.state.games.filter(( game ) => {
+				return game.active && game.teamNext !== '';
+			});
+			// Get all active teams w/ games
+			const readyAssignedTeams = context.state.teams.filter(( team ) => {
+				return team.ready && team.gameNext !== '';
+			});
+			// Move next game to current game and empty out next game
+			activeFilledGames.forEach(( game ) => {
+				context.commit( 'startSingleGame', {
+					game: game,
+					nextTeam: game.teamNext
+				});
+			});
+			// Change team assignments from next game to current game
+			readyAssignedTeams.forEach(( team ) => {
+				context.commit( 'moveTeamToGame', {
+					team: team,
+					nextGame: team.gameNext
+				});
+			});
 		}
 	},
 	mutations: {
@@ -157,11 +183,24 @@ export default new Vuex.Store({
 		removeGame(state, index){
 			state.games.splice( index, 1 );
 		},
-		assignNextTeamToRoom( state, payload ) {
+		assignNextTeamToGame( state, payload ) {
 			payload.team.gameNext = payload.gameNext;
 		},
-		assignRoomToTeam( state, payload ) {
+		assignGameToTeam( state, payload ) {
 			payload.game.teamNext = payload.teamNext;
+		},
+		assignFirstGame( state, payload ) {
+			payload.team.gameStarted = payload.game;
+		},
+		// Take teamNext and move to teamCurrent
+		startSingleGame( state, payload ) {
+			payload.game.teamCurrent = payload.nextTeam;
+			payload.game.teamNext = '';
+		},
+		// Take gameNext and move to gameCurrent
+		moveTeamToGame( state, payload ) {
+			payload.team.gameCurrent = payload.nextGame;
+			payload.team.gameNext = '';
 		}
 
 	}
