@@ -3,7 +3,7 @@
 		<h1>TeamList</h1>
 		<ul class="teamsList">
 			<li v-for="team in teams" class="teamItem" v-bind:class="{ ready: team.ready }">
-				<p class="teamName">{{ team.name }}</p>
+				<p class="teamName">{{ team.name }}<br><span class="id">{{ team.id }}</span></p>
 				<div class="actions">
 					<input type="checkbox" v-model="team.ready" />
 				</div>
@@ -76,5 +76,11 @@ export default {
 .teamName{
 	font-weight:500;
 	margin:0px;
+	text-align:left;
+}
+
+.id{
+	font-size:10px;
+	font-style:italic;
 }
 </style>

@@ -1,6 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import * as fb from '@/firebase.js';
+import uuidv3 from 'uuid/v3';
+// Generate our UUID namespaces
+const rootNamespace = '8a529469-9676-4682-9a5f-466df3938395';
+const gameNamespace = uuidv3( 'game', rootNamespace );
+const teamNamespace = uuidv3( 'team', rootNamespace );
 
 Vue.use(Vuex)
 
@@ -86,8 +91,9 @@ export default new Vuex.Store({
 					game.teamNext = '';
 					games.push( game );
 				});
+				console.log( games );
 				context.commit( 'setGames', games );
-			})
+			});
 		},
 		removeGame( context, id ) {
 			fb.gamesCollection.doc( id ).delete().then( () => {
@@ -98,25 +104,32 @@ export default new Vuex.Store({
 			});
 		},
 		addGame( context, game ) {
-			fb.gamesCollection.add( game ).then( (docRef) => {
-				game.id = docRef.id;
-				game.teamCurrent = '';
-				// game.created = fb.firestore.FieldValue.serverTimestamp()
-				context.commit( 'addGame', game );
-			});
+			// Get the creation timestamp
+			const created = Date.now();
+			// Generate a UUID for our game and set some default values
+			game.id = uuidv3( game.name + created, gameNamespace );
+			game.created = created;
+			game.teamCurrent = '';
+			// Update the store
+			context.commit( 'addGame', game );
+			// Update the remote
+			fb.gamesCollection.add( game );
 		},
 		createTeam( context, team ) {
 			// Modify the object before updating to the DB
-			team.created = fb.firebase.firestore.Timestamp.now();
-			fb.teamsCollection.add( team ).then( (docRef) => {
-				// Modify the obejct before adding to the store
-				team.id = docRef.id;
-				team.ready = false;
-				team.gameStarted = '';
-				team.gameCurrent = '';
-				team.gameNext = '';
-				context.commit( 'addTeam', team );
-			})
+			// team.created = fb.firebase.firestore.Timestamp.now();
+			// Get the creation timestamp
+			const created = Date.now();
+			// Generate a UUID for the team and set some default values
+			team.id = uuidv3( team.name + created, teamNamespace );
+			team.ready = false;
+			team.gameStarted = '';
+			team.gameCurrent = '';
+			team.gameNext = '';
+			// Update the store
+			context.commit( 'addTeam', team );
+			// Update the remote
+			fb.teamsCollection.add( team );
 		},
 		nextRound( context ) {
 			// Get active games and teams
@@ -140,6 +153,35 @@ export default new Vuex.Store({
 					teamNext: team.id
 				});
 			});
+			const rotatingTeams = context.getters.rotatingTeams;
+			const activeGamesInOrder = context.getters.activeGamesInOrder;
+			// Reverse through the active games array
+			for( let i = activeGamesInOrder.length - 1; i >= 0; i-- ) {
+				let game = activeGamesInOrder[i];
+				// If this game isnt empty, we want to advance this team to the next game
+				if ( game.teamCurrent !== '' ) {
+					// Set the next game
+					let nextGame = {};
+					if( i == activeGamesInOrder.length - 1 ) {
+						nextGame = activeGamesInOrder[0];
+					} else {
+						nextGame = activeGamesInOrder[i+1];
+					}
+					const teamId = game.teamCurrent;
+					// Set the next game's next team to the current game's current team
+					nextGame.teamNext = teamId;
+					// Clear out the current game's current team
+					game.teamCurrent = '';
+					// Update the next game for the team
+					const team = rotatingTeams.find(( team ) => {
+						return team.id == teamId;
+					});
+					context.commit( 'assignNextTeamToGame', {
+						team: team,
+						game: nextGame.id
+					});
+				}
+			}
 			// Assign in-progress teams to next rooms
 			// get active rooms in order
 			// get active teams in order

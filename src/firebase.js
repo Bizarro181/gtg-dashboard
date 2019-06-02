@@ -12,6 +12,8 @@ const firebaseApp = firebase.initializeApp({
 });
 
 const firestore = firebaseApp.firestore();
+firestore.enablePersistence();
+firestore.disableNetwork();
 
 const gamesCollection = firestore.collection( 'games' );
 const teamsCollection = firestore.collection( 'teams' );

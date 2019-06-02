@@ -3,8 +3,8 @@
 		<ul class="gameGrid">
 			<li class="gameItem" v-for="game in games">
 				<p class="gameName">{{ game.name }}</p>
-				<p>Team Next: {{ game.teamNext }}</p>
-				<p>Team Current: {{ game.teamCurrent }}</p>
+				<p class="info">Team Next:<br><span class="id">{{ game.teamNext }}</span></p>
+				<p class="info">Team Current:<br><span class="id">{{ game.teamCurrent }}</span></p>
 			</li>
 		</ul>
 	</div>
@@ -50,7 +50,7 @@ export default {
 	list-style:none;
 	margin:0px auto;
 	padding:0px;
-	width:500px;
+	width:100%;
 	display:flex;
 	justify-content:space-between;
 }
@@ -63,6 +63,11 @@ export default {
 	margin:10px;
 	flex-wrap:wrap;
 
+	.info{
+		flex-basis:100%;
+		text-align:left;
+	}
+
 	&:last-child{
 		border-bottom:1px solid #cacaca;
 	}
@@ -70,5 +75,10 @@ export default {
 .gameName{
 	font-weight:bold;
 	margin:0px;
+	text-align:center;
+}
+.id{
+	font-style:italic;
+	font-size:10px;
 }
 </style>
