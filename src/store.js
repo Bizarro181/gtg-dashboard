@@ -71,12 +71,12 @@ export default new Vuex.Store({
 		},
 		newTeams( state, getters ) {
 			return getters.readyTeams.filter(( team ) => {
-				return team.gameCurrent == '';
+				return team.gameStarted == '';
 			});
 		},
 		rotatingTeams( state, getters ) {
 			return getters.readyTeams.filter(( team ) => {
-				return team.gameCurrent !== '';
+				return team.gameStarted !== '';
 			});
 		}
 	},
@@ -86,7 +86,6 @@ export default new Vuex.Store({
 			fb.gamesCollection.get().then( querySnapshot => {
 				querySnapshot.forEach( doc => {
 					let game = doc.data();
-					game.id = doc.id;
 					game.teamCurrent = '';
 					game.teamNext = '';
 					games.push( game );
@@ -132,60 +131,66 @@ export default new Vuex.Store({
 			fb.teamsCollection.add( team );
 		},
 		nextRound( context ) {
-			// Get active games and teams
-			const newTeams = context.getters.newTeams;
-			// Assign new teams to empty rooms
-			newTeams.forEach(( team ) => {
-				let games = context.getters.activeEmptyGamesInOrder;
-				// Assign the "first game" to the game
-				context.commit( 'assignFirstGame', {
-					team: team,
-					game: games[0].id
-				});
-				// Assign the game to the team
-				context.commit( 'assignNextTeamToGame', {
-					team: team,
-					gameNext: games[0].id
-				});
-				// Assign the team to the game
-				context.commit( 'assignGameToTeam', {
-					game: games[0],
-					teamNext: team.id
-				});
-			});
 			const rotatingTeams = context.getters.rotatingTeams;
 			const activeGamesInOrder = context.getters.activeGamesInOrder;
-			// Reverse through the active games array
-			for( let i = activeGamesInOrder.length - 1; i >= 0; i-- ) {
-				let game = activeGamesInOrder[i];
-				// If this game isnt empty, we want to advance this team to the next game
-				if ( game.teamCurrent !== '' ) {
-					// Set the next game
-					let nextGame = {};
-					if( i == activeGamesInOrder.length - 1 ) {
-						nextGame = activeGamesInOrder[0];
-					} else {
-						nextGame = activeGamesInOrder[i+1];
+			if ( rotatingTeams.length > 0 ) {
+				// Reverse through the active games array
+				for( let i = activeGamesInOrder.length - 1; i >= 0; i-- ) {
+					let game = activeGamesInOrder[i];
+					// If this game isnt empty, we want to advance this team to the next game
+					if ( game.teamCurrent !== '' ) {
+						// Set the next game
+						let nextGame = {};
+						if( i == activeGamesInOrder.length - 1 ) {
+							nextGame = activeGamesInOrder[0];
+						} else {
+							nextGame = activeGamesInOrder[i+1];
+						}
+						const teamId = game.teamCurrent;
+						// Set the next game's next team to the current game's current team
+						context.commit( 'assignGameToTeam', {
+							game: nextGame,
+							teamNext: teamId
+						});
+						//nextGame.teamNext = teamId;
+						// Clear out the current game's current team
+						context.commit( 'clearTeamCurrentOnGame', game );
+						//game.teamCurrent = '';
+						// Update the next game for the team
+						const team = rotatingTeams.find(( team ) => {
+							return team.id == teamId;
+						});
+						context.commit( 'assignNextTeamToGame', {
+							team: team,
+							gameNext: nextGame.id
+						});
+						context.commit( 'clearGameCurrentOnTeam', team );
 					}
-					const teamId = game.teamCurrent;
-					// Set the next game's next team to the current game's current team
-					nextGame.teamNext = teamId;
-					// Clear out the current game's current team
-					game.teamCurrent = '';
-					// Update the next game for the team
-					const team = rotatingTeams.find(( team ) => {
-						return team.id == teamId;
-					});
-					context.commit( 'assignNextTeamToGame', {
-						team: team,
-						game: nextGame.id
-					});
 				}
 			}
-			// Assign in-progress teams to next rooms
-			// get active rooms in order
-			// get active teams in order
-			// Advance teams one index
+			// Get active games and teams
+			const newTeams = context.getters.newTeams;
+			if ( newTeams.length > 0 ) {
+				// Assign new teams to empty rooms
+				newTeams.forEach(( team ) => {
+					let games = context.getters.activeEmptyGamesInOrder;
+					// Assign the "first game" to the game
+					context.commit( 'assignFirstGame', {
+						team: team,
+						game: games[0].id
+					});
+					// Assign the game to the team
+					context.commit( 'assignNextTeamToGame', {
+						team: team,
+						gameNext: games[0].id
+					});
+					// Assign the team to the game
+					context.commit( 'assignGameToTeam', {
+						game: games[0],
+						teamNext: team.id
+					});
+				});
+			}
 		},
 		startRound( context ) {
 			// Get all active games w/ teams
@@ -243,6 +248,12 @@ export default new Vuex.Store({
 		moveTeamToGame( state, payload ) {
 			payload.team.gameCurrent = payload.nextGame;
 			payload.team.gameNext = '';
+		},
+		clearTeamCurrentOnGame( state, payload ) {
+			payload.teamCurrent = '';
+		},
+		clearGameCurrentOnTeam( state, payload ) {
+			payload.gameCurrent = '';
 		}
 
 	}

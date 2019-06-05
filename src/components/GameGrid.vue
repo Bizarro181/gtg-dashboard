@@ -2,7 +2,7 @@
 	<div class="hello">
 		<ul class="gameGrid">
 			<li class="gameItem" v-for="game in games">
-				<p class="gameName">{{ game.name }}</p>
+				<p class="gameName">{{ game.name }}<br><span class="id">{{ game.id }}</span></p>
 				<p class="info">Team Next:<br><span class="id">{{ game.teamNext }}</span></p>
 				<p class="info">Team Current:<br><span class="id">{{ game.teamCurrent }}</span></p>
 			</li>
@@ -56,12 +56,12 @@ export default {
 }
 .gameItem{
 	display:flex;
-	align-items:center;
 	justify-content:space-between;
 	border:1px solid #cacaca;
 	padding:20px;
 	margin:10px;
 	flex-wrap:wrap;
+	text-align:left;
 
 	.info{
 		flex-basis:100%;
