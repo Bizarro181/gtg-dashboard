@@ -13,6 +13,7 @@ export default new Vuex.Store({
 	state: {
 		session: '',
 		running: false,
+		ready: false,
 		teams:[],
 		games:[],
 		assignments:[],
@@ -43,6 +44,9 @@ export default new Vuex.Store({
 		]
 	},
 	getters:{
+		teams( state, getters ) {
+			return state.teams;
+		},
 		gamesInOrder( state, getters ) {
 			return state.games.sort((a, b) => {
 				if ( a.order < b.order ) {
@@ -88,6 +92,12 @@ export default new Vuex.Store({
 		},
 		gameById: ( state, getters ) => ( id ) => {
 			return state.games.find( game => game.id === id);
+		},
+		ready( state ){
+			return state.ready;
+		},
+		running( state ){
+			return state.running;
 		}
 	},
 	actions:{
@@ -201,6 +211,9 @@ export default new Vuex.Store({
 					});
 				});
 			}
+			// Advance the round - we're ready to start
+			context.commit( 'roundReadyTrue' );
+			
 		},
 		startRound( context ) {
 			// Get all active games w/ teams
@@ -225,6 +238,13 @@ export default new Vuex.Store({
 					nextGame: team.gameNext
 				});
 			});
+			// Set running to true and reset the roundReady flag
+			context.commit( 'setRunningTrue' );
+			context.commit( 'roundReadyFalse' );
+			// Fake a game by timing back in
+			setTimeout(() => {
+				context.commit( 'setRunningFalse' );
+			}, 5000);
 		}
 	},
 	mutations: {
@@ -264,6 +284,21 @@ export default new Vuex.Store({
 		},
 		clearGameCurrentOnTeam( state, payload ) {
 			payload.gameCurrent = '';
+		},
+		roundReadyTrue( state ) {
+			state.ready = true;
+		},
+		roundReadyFalse( state ) {
+			state.ready = false;
+		},
+		setRunningTrue( state ) {
+			state.running = true;
+		},
+		setRunningFalse( state ) {
+			state.running = false;
+		},
+		setTeamReadyStatus( state, payload ) {
+			payload.team.ready = payload.status;
 		}
 
 	}

@@ -2,10 +2,10 @@
 	<div class="teamPanel">
 		<h1>TeamList</h1>
 		<ul class="teamsList">
-			<li v-for="team in teams" class="teamItem" v-bind:class="{ ready: team.ready }">
-				<p class="teamName">{{ team.name }}<br><span class="id">{{ team.id }}</span></p>
+			<li v-for="( team, index ) in teams" class="teamItem" v-bind:class="{ ready: team.ready }">
+				<p class="teamName">{{ team.name }}</p>
 				<div class="actions">
-					<input type="checkbox" v-model="team.ready" />
+					<input type="checkbox" :checked="team.ready" :disabled="( !team.ready && !canReady )" v-on:change="validateReady( index, $event )" />
 				</div>
 			</li>
 		</ul>
@@ -39,11 +39,36 @@ export default {
 			this.teamData.name = '';
 			this.teamData.emails = '';
 			this.teamData.ready = '';
+		},
+		validateReady( index, event ){
+			event.preventDefault();
+			// if the team isnt ready, check if making it ready would give us more ready teams than we have ready games
+			if( this.teams[index].ready === false && this.readyTeams.length + 1 <= this.activeGamesInOrder.length ) {
+				this.$store.commit( 'setTeamReadyStatus', {
+					team: this.teams[index],
+					status: true
+				});
+			} else if( this.teams[index].ready === true ) {
+				// If we're unreadying the team, we dont care (for now), just do it
+				this.$store.commit( 'setTeamReadyStatus', {
+					team: this.teams[index],
+					status: false
+				});
+			}
 		}
 	},
 	computed:{
 		teams(){
-			return this.$store.state.teams;
+			return this.$store.getters.teams;
+		},
+		readyTeams(){
+			return this.$store.getters.readyTeams;
+		},
+		activeGamesInOrder(){
+			return this.$store.getters.activeGamesInOrder;
+		},
+		canReady(){
+			return this.readyTeams.length + 1 <= this.activeGamesInOrder.length;
 		}
 	}
 };

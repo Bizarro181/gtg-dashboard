@@ -4,11 +4,18 @@ On Load
 "Start Session"
  - Add teams in side panel
 
-Can only "ready" a team if there are less ready teams than rooms
 "Unready"ing a team removes them from "next" and "current"
 Teams can be removed entirely only when not ready
+Can unready games
+Bug: switching back to dashboard from games settings clears the teams (it's loading from remote again)
+Express server for ws waiting and endpoints for teams next/prev
+Express server for scores?
+Express server ws for receiving scores?
 
 Next:
-Show Team/Next current as team name
-Cant "Next Round" until there is at least one ready team
-Cant "Start Round" until next round (how?)
+// Show Team/Next current as team name
+// Cant "Next Round" until there is at least one ready team
+// Cant "Start Round" until next round (how?)
+// Cant "ready" a team if there would be more ready teams than rooms
+
+Cant "ready" a team if session "ready" is true
