@@ -78,6 +78,16 @@ export default new Vuex.Store({
 			return getters.readyTeams.filter(( team ) => {
 				return team.gameStarted !== '';
 			});
+		},
+		teamById( state, getters ) {
+			return ( id ) => {
+				return state.teams.find( team => {
+					return team.id === id;
+				});
+			}; 
+		},
+		gameById: ( state, getters ) => ( id ) => {
+			return state.games.find( game => game.id === id);
 		}
 	},
 	actions:{

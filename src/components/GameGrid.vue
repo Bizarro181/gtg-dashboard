@@ -3,14 +3,16 @@
 		<ul class="gameGrid">
 			<li class="gameItem" v-for="game in games">
 				<p class="gameName">{{ game.name }}<br><span class="id">{{ game.id }}</span></p>
-				<p class="info">Team Next:<br><span class="id">{{ game.teamNext }}</span></p>
-				<p class="info">Team Current:<br><span class="id">{{ game.teamCurrent }}</span></p>
+				<p class="info">Team Next:<br><span class="id" v-if="teamById( game.teamNext )">{{ teamById( game.teamNext ).name }}</span></p>
+				<p class="info">Team Current:<br><span class="id" v-if="teamById( game.teamCurrent )">{{ teamById( game.teamCurrent ).name }}</span></p>
 			</li>
 		</ul>
 	</div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
 	data(){
 		return {
@@ -35,7 +37,10 @@ export default {
 	computed:{
 		games(){
 			return this.$store.getters.gamesInOrder;
-		}
+		},
+		...mapGetters([
+			'teamById'
+		])
 	},
 
 	created(){
