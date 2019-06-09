@@ -12,10 +12,12 @@ Express server for ws waiting and endpoints for teams next/prev
 Express server for scores?
 Express server ws for receiving scores?
 
+
 Next:
 // Show Team/Next current as team name
 // Cant "Next Round" until there is at least one ready team
 // Cant "Start Round" until next round (how?)
 // Cant "ready" a team if there would be more ready teams than rooms
+// Get dashboard up on firebase hosting
 
 Cant "ready" a team if session "ready" is true
