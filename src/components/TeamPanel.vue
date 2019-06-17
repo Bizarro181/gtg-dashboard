@@ -3,7 +3,7 @@
 		<h1>TeamList</h1>
 		<ul class="teamsList">
 			<li v-for="( team, index ) in teams" class="teamItem" v-bind:class="{ ready: team.ready }">
-				<p class="teamName">{{ team.name }}</p>
+				<p class="teamName">{{ team.name }}</p><br><span v-if="team.ready">Score: {{ scoresById( team.id) }}</span>
 				<div class="actions">
 					<input type="checkbox" :checked="team.ready" :disabled="( !team.ready && !canReady )" v-on:change="validateReady( index, $event )" />
 				</div>
@@ -18,6 +18,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
 	data(){
 		return {
@@ -69,7 +71,10 @@ export default {
 		},
 		canReady(){
 			return this.readyTeams.length + 1 <= this.activeGamesInOrder.length;
-		}
+		},
+		...mapGetters({
+			scoresById: 'scoresById'
+		})
 	}
 };
 </script>

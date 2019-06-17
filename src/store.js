@@ -18,30 +18,10 @@ export default new Vuex.Store({
 		games:[],
 		assignments:[],
 		scores:[],
-		sessionInfo:[
-			{
-				teamName: 'Robert',
-				emails: '',
-				ready: true,
-				gameStarted: 'gameid',
-				gameNext: 'gameid',
-				gameCurrent: 'gameId',
-				scores:[
-					{
-						game: 'id',
-						score: 10
-					},
-					{
-						game: 'id1',
-						score: 20,
-					},
-					{
-						game: 'id2',
-						score: 30,
-					}
-				]
-			}
-		]
+		sessionInfo:{
+			gamesStarted:0,
+			gamesCompleted:0
+		}
 	},
 	getters:{
 		teams( state, getters ) {
@@ -98,9 +78,30 @@ export default new Vuex.Store({
 		},
 		running( state ){
 			return state.running;
-		}
+		},
+		scoresById( state, getters ) {
+			return ( id ) => {
+				if( state.scores.length > 0 ) {
+					return state.scores.filter( score => score.team === id ).map( score => score.score ).reduce( ( prev, next ) => prev + next );
+				} else {
+					return false;
+				}
+			}
+		},
 	},
 	actions:{
+		SOCKET_gameComplete( context, data ){
+			console.log( data );
+			console.log( 'test' );
+			context.commit( 'addScore', data );
+			context.commit( 'incrementGamesCompleted' );
+			// Have all the games that we sent start signals to completed?
+			if( context.state.sessionInfo.gamesCompleted == context.state.sessionInfo.gamesStarted ) {
+				context.commit( 'setRunningFalse' );
+				context.commit( 'resetGamesStarted' );
+				context.commit( 'resetGamesCompleted' );
+			}
+		},
 		fetchGames( context ) {
 			let games = [];
 			fb.gamesCollection.get().then( querySnapshot => {
@@ -230,6 +231,7 @@ export default new Vuex.Store({
 					game: game,
 					nextTeam: game.teamNext
 				});
+				context.commit( 'incrementGamesStarted' );
 			});
 			// Change team assignments from next game to current game
 			readyAssignedTeams.forEach(( team ) => {
@@ -242,9 +244,9 @@ export default new Vuex.Store({
 			context.commit( 'setRunningTrue' );
 			context.commit( 'roundReadyFalse' );
 			// Fake a game by timing back in
-			setTimeout(() => {
-				context.commit( 'setRunningFalse' );
-			}, 5000);
+			// setTimeout(() => {
+			// 	context.commit( 'setRunningFalse' );
+			// }, 5000);
 		}
 	},
 	mutations: {
@@ -299,6 +301,21 @@ export default new Vuex.Store({
 		},
 		setTeamReadyStatus( state, payload ) {
 			payload.team.ready = payload.status;
+		},
+		addScore( state, scoreData ) {
+			state.scores.push( scoreData );
+		},
+		incrementGamesStarted( state ) {
+			state.sessionInfo.gamesStarted++;
+		},
+		resetGamesStarted( state ) {
+			state.sessionInfo.gamesStarted = 0;
+		},
+		incrementGamesCompleted( state ) {
+			state.sessionInfo.gamesCompleted++;
+		},
+		resetGamesCompleted( state ) {
+			state.sessionInfo.gamesCompleted = 0;
 		}
 
 	}
