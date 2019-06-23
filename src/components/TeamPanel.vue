@@ -4,6 +4,7 @@
 		<ul class="teamsList">
 			<li v-for="( team, index ) in teams" class="teamItem" v-bind:class="{ ready: team.ready }">
 				<p class="teamName">{{ team.name }}</p><br><span v-if="team.ready">Score: {{ scoresById( team.id) }}</span>
+				<p>{{ team.id }}
 				<div class="actions">
 					<input type="checkbox" :checked="team.ready" :disabled="( !team.ready && !canReady )" v-on:change="validateReady( index, $event )" />
 				</div>

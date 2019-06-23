@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import * as fb from '@/firebase.js';
 import uuidv3 from 'uuid/v3';
+
 // Generate our UUID namespaces
 const rootNamespace = '8a529469-9676-4682-9a5f-466df3938395';
 const gameNamespace = uuidv3( 'game', rootNamespace );
@@ -82,7 +83,8 @@ export default new Vuex.Store({
 		scoresById( state, getters ) {
 			return ( id ) => {
 				if( state.scores.length > 0 ) {
-					return state.scores.filter( score => score.team === id ).map( score => score.score ).reduce( ( prev, next ) => prev + next );
+					// Filter by id, map to only the score and reduce it to the sum
+					return state.scores.filter( score => score.teamId === id ).map( score => score.score ).reduce( ( prev, next ) => prev + next, 0 );
 				} else {
 					return false;
 				}
@@ -91,8 +93,6 @@ export default new Vuex.Store({
 	},
 	actions:{
 		SOCKET_gameComplete( context, data ){
-			console.log( data );
-			console.log( 'test' );
 			context.commit( 'addScore', data );
 			context.commit( 'incrementGamesCompleted' );
 			// Have all the games that we sent start signals to completed?
@@ -214,7 +214,8 @@ export default new Vuex.Store({
 			}
 			// Advance the round - we're ready to start
 			context.commit( 'roundReadyTrue' );
-			
+			// Update teams to the remote
+			this._vm.$socket.emit( 'updateTeams', context.getters.teams );
 		},
 		startRound( context ) {
 			// Get all active games w/ teams

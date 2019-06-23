@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Games from './views/Games.vue'
 import Teams from './views/Teams.vue'
+import Scores from './views/Scores.vue'
 
 Vue.use(Router)
 
@@ -24,6 +25,11 @@ export default new Router({
       path: '/teams',
       name: 'teams',
       component: Teams
+    },
+    {
+      path: '/scores',
+      name: 'scores',
+      component: Scores
     },
     {
       path: '/about',
