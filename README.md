@@ -25,8 +25,9 @@ Next:
 // Cant "ready" a team if there would be more ready teams than rooms
 // Get dashboard up on firebase hosting
 Send teams and rooms data to (local) remote
-Get scoreboard working
+// Get scoreboard working
 Get next display working
+Get scores to show in order
 
 Cant "ready" a team if session "ready" is true
 Rely on socket.io messaging to communicate scores to leaderboard terminal

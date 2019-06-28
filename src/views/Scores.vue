@@ -1,17 +1,17 @@
 <template>
   <div class="home">
-    <TeamPanel />
+    <Scoreboard />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import TeamPanel from '@/components/TeamPanel.vue'
+import Scoreboard from '@/components/Scoreboard.vue'
 
 export default {
   name: 'home',
   components: {
-    TeamPanel
+    Scoreboard
   }
 }
 </script>

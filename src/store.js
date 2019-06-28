@@ -90,6 +90,16 @@ export default new Vuex.Store({
 				}
 			}
 		},
+		scoreCountById( state, getters ) {
+			return ( id ) => {
+				if( state.scores.length > 0 ) {
+					// Filter by id, map to only the score and reduce it to the sum
+					return state.scores.filter( score => score.teamId === id ).length;
+				} else {
+					return false;
+				}
+			}
+		},
 	},
 	actions:{
 		SOCKET_gameComplete( context, data ){
@@ -101,6 +111,9 @@ export default new Vuex.Store({
 				context.commit( 'resetGamesStarted' );
 				context.commit( 'resetGamesCompleted' );
 			}
+		},
+		SOCKET_updateTeams( context, teams ) {
+			context.commit( 'setTeams', teams )
 		},
 		fetchGames( context ) {
 			let games = [];
@@ -253,6 +266,9 @@ export default new Vuex.Store({
 	mutations: {
 		addTeam(state, team) {
 			state.teams.push( team );
+		},
+		setTeams(state, teams) {
+			Vue.set( state, 'teams', [...teams] );
 		},
 		addGame(state, game) {
 			state.games.push( game );
