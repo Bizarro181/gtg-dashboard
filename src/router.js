@@ -4,6 +4,8 @@ import Home from './views/Home.vue'
 import Games from './views/Games.vue'
 import Teams from './views/Teams.vue'
 import Scores from './views/Scores.vue'
+import GameInfo from './components/GameInfo.vue'
+import Instructions from './components/Instructions.vue'
 
 Vue.use(Router)
 
@@ -30,6 +32,17 @@ export default new Router({
       path: '/scores',
       name: 'scores',
       component: Scores
+    },
+    {
+      path: '/instructions',
+      name: 'instructions',
+      component: Instructions
+    },
+     {
+      path: '/game/:gameName',
+      name: 'gameInfo',
+      component: GameInfo,
+      props: true
     },
     {
       path: '/about',

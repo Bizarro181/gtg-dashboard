@@ -49,6 +49,20 @@ export default new Vuex.Store({
 				return game.teamNext == '';
 			});
 		},
+		gameByName( state, getters ) {
+			return ( name ) => {
+				state.games.filter(( game )  => {
+					return game.name == name;
+				});
+			}
+		},
+		gameById( state, getters ) {
+			return ( id ) => {
+				state.games.filter(( game )  => {
+					return game.id == id;
+				});
+			}
+		},
 		readyTeams( state, getters ) {
 			return state.teams.filter(( team ) => {
 				return team.ready == true;
@@ -70,6 +84,11 @@ export default new Vuex.Store({
 					return team.id === id;
 				});
 			}; 
+		},
+		teamsSortedByScore( state, getters ) {
+			return state.teams.sort(( a, b ) => {
+				return b.score - a.score;
+			});
 		},
 		gameById: ( state, getters ) => ( id ) => {
 			return state.games.find( game => game.id === id);
@@ -103,17 +122,36 @@ export default new Vuex.Store({
 	},
 	actions:{
 		SOCKET_gameComplete( context, data ){
+			// Update the score to our store
 			context.commit( 'addScore', data );
+			// Increment the games completed
 			context.commit( 'incrementGamesCompleted' );
+			// Update the score to the relevant team
+			context.commit( 'increaseScore', {
+				team: context.getters.teamById( data.teamId ),
+				score: data.score
+			} );
 			// Have all the games that we sent start signals to completed?
 			if( context.state.sessionInfo.gamesCompleted == context.state.sessionInfo.gamesStarted ) {
 				context.commit( 'setRunningFalse' );
 				context.commit( 'resetGamesStarted' );
 				context.commit( 'resetGamesCompleted' );
+				// Update ready state
+				this._vm.$socket.emit( 'updateReady', context.getters.ready );
 			}
 		},
 		SOCKET_updateTeams( context, teams ) {
 			context.commit( 'setTeams', teams )
+		},
+		SOCKET_updateGames( context, games ) {
+			context.commit( 'setGames', games )
+		},
+		SOCKET_updateReady( context, ready ) {
+			if ( ready ) {
+				context.commit( 'roundReadyTrue' );
+			} else {
+				context.commit( 'roundReadyFalse' )
+			}
 		},
 		fetchGames( context ) {
 			let games = [];
@@ -124,8 +162,9 @@ export default new Vuex.Store({
 					game.teamNext = '';
 					games.push( game );
 				});
-				console.log( games );
 				context.commit( 'setGames', games );
+				// Update games socket
+				this._vm.$socket.emit( 'updateGames', context.getters.gamesInOrder );
 			});
 		},
 		removeGame( context, id ) {
@@ -147,6 +186,8 @@ export default new Vuex.Store({
 			context.commit( 'addGame', game );
 			// Update the remote
 			fb.gamesCollection.add( game );
+			// Update games socket
+			this._vm.$socket.emit( 'updateGames', context.getters.gamesInOrder );
 		},
 		createTeam( context, team ) {
 			// Modify the object before updating to the DB
@@ -159,6 +200,7 @@ export default new Vuex.Store({
 			team.gameStarted = '';
 			team.gameCurrent = '';
 			team.gameNext = '';
+			team.score = 0;
 			// Update the store
 			context.commit( 'addTeam', team );
 			// Update the remote
@@ -229,6 +271,7 @@ export default new Vuex.Store({
 			context.commit( 'roundReadyTrue' );
 			// Update teams to the remote
 			this._vm.$socket.emit( 'updateTeams', context.getters.teams );
+			this._vm.$socket.emit( 'updateReady', context.getters.ready );
 		},
 		startRound( context ) {
 			// Get all active games w/ teams
@@ -274,7 +317,7 @@ export default new Vuex.Store({
 			state.games.push( game );
 		},
 		setGames(state, games) {
-			state.games = games;
+			Vue.set( state, 'games', [...games] );
 		},
 		removeGame(state, index){
 			state.games.splice( index, 1 );
@@ -316,6 +359,9 @@ export default new Vuex.Store({
 		setRunningFalse( state ) {
 			state.running = false;
 		},
+		removeTeam( state, index ) {
+			state.teams.splice( index, 1 );
+		},
 		setTeamReadyStatus( state, payload ) {
 			payload.team.ready = payload.status;
 		},
@@ -333,7 +379,9 @@ export default new Vuex.Store({
 		},
 		resetGamesCompleted( state ) {
 			state.sessionInfo.gamesCompleted = 0;
+		},
+		increaseScore( state, payload ){
+			payload.team.score += payload.score;
 		}
-
 	}
 })

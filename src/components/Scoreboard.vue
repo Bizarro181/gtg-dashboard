@@ -2,10 +2,10 @@
 	<div class="teamPanel">
 		<h1>Leaderboard</h1>
 		<ul class="teamsList">
-			<li v-for="( team, index ) in teams" class="teamItem" v-bind:class="{ ready: team.ready }">
+			<li v-for="( team, index ) in teamsSortedByScore" class="teamItem" v-bind:class="{ ready: team.ready }">
 				<div class="scoreLeft">
 					<p class="teamName">{{ team.name }}</p>
-					<p class="gamesPlayed">{{ scoreCountById( team.id ) }} games played</p>
+					<p class="gamesPlayed">{{ scoreCountById( team.id ) ? scoreCountById( team.id ) : 0 }} {{ gamesText( scoreCountById( team.id ) ) }} played</p>
 				</div>
 				<div class="scoreRight">
 					<p class="score" v-if="team.ready && scoresById( team.id )">{{ scoresById( team.id) }}</p>
@@ -20,50 +20,19 @@ import { mapGetters } from 'vuex';
 
 export default {
 	methods:{
-		addTeam(){
-			this.$store.dispatch( 'createTeam', 
-				{
-					name: this.teamData.name,
-					emails: this.teamData.emails.split( ',' ),
-				}
-			);
-			this.teamData.name = '';
-			this.teamData.emails = '';
-			this.teamData.ready = '';
-		},
-		validateReady( index, event ){
-			event.preventDefault();
-			// if the team isnt ready, check if making it ready would give us more ready teams than we have ready games
-			if( this.teams[index].ready === false && this.readyTeams.length + 1 <= this.activeGamesInOrder.length ) {
-				this.$store.commit( 'setTeamReadyStatus', {
-					team: this.teams[index],
-					status: true
-				});
-			} else if( this.teams[index].ready === true ) {
-				// If we're unreadying the team, we dont care (for now), just do it
-				this.$store.commit( 'setTeamReadyStatus', {
-					team: this.teams[index],
-					status: false
-				});
+		gamesText( score ){
+			if ( score == 1 ){
+				return "game";
+			} else {
+				return "games";
 			}
 		}
 	},
 	computed:{
-		teams(){
-			return this.$store.getters.teams;
-		},
-		readyTeams(){
-			return this.$store.getters.readyTeams;
-		},
-		activeGamesInOrder(){
-			return this.$store.getters.activeGamesInOrder;
-		},
-		canReady(){
-			return this.readyTeams.length + 1 <= this.activeGamesInOrder.length;
-		},
 		...mapGetters({
 			scoresById: 'scoresById',
-			scoreCountById: 'scoreCountById'
+			scoreCountById: 'scoreCountById',
+			teamsSortedByScore: 'teamsSortedByScore'
 		})
 	}
 };
@@ -76,10 +45,11 @@ export default {
 	margin:0px auto;
 	padding:0px;
 	width:100%;
+	max-width:600px;
 }
 .teamItem{
 	display:flex;
-	align-items:left;
+	align-items:center;
 	justify-content:space-between;
 	border:1px solid #cacaca;
 	border-bottom:none;
@@ -94,6 +64,8 @@ export default {
 	font-weight:500;
 	margin:0px;
 	text-align:left;
+	text-transform:capitalize;
+	font-size:34px;
 }
 
 .id{
@@ -103,7 +75,7 @@ export default {
 
 .score{
 	font-weight:bold;
-	font-size:20px;
+	font-size:30px;
 }
 
 p{
