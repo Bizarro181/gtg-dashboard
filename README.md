@@ -28,6 +28,11 @@ Next:
 // Get scores to show in order
 // Get next display working
 // Send teams and rooms data to (local) remote
+// --- 7/20/19
+// BUG: Un-readying and team and hitting next doesnt let you start the next round, also the team should move out of the rotation
+// BUG: Removing teams actually wasnt working
+// BUG: Black hole game complete calls when the round isnt running (needed to do this at the socket server level because this event gets emitted to all screens)
+
 
 Cant "ready" a team if session "ready" is true
 Rely on socket.io messaging to communicate scores to leaderboard terminal

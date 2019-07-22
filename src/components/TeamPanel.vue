@@ -87,7 +87,7 @@ export default {
 			}
 		},
 		removeTeam( teamIndex ) {
-			if( !team.ready ){
+			if( !this.teams[teamIndex].ready ){
 				this.$store.commit( 'removeTeam', teamIndex );
 			}
 		}

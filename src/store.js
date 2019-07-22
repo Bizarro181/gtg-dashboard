@@ -78,6 +78,11 @@ export default new Vuex.Store({
 				return team.gameStarted !== '';
 			});
 		},
+		nonReadyTeams( state, getters ) {
+			return state.teams.filter(( team ) => {
+				return team.ready === false;
+			});
+		},
 		teamById( state, getters ) {
 			return ( id ) => {
 				return state.teams.find( team => {
@@ -122,22 +127,30 @@ export default new Vuex.Store({
 	},
 	actions:{
 		SOCKET_gameComplete( context, data ){
-			// Update the score to our store
-			context.commit( 'addScore', data );
-			// Increment the games completed
-			context.commit( 'incrementGamesCompleted' );
-			// Update the score to the relevant team
-			context.commit( 'increaseScore', {
-				team: context.getters.teamById( data.teamId ),
-				score: data.score
-			} );
-			// Have all the games that we sent start signals to completed?
-			if( context.state.sessionInfo.gamesCompleted == context.state.sessionInfo.gamesStarted ) {
-				context.commit( 'setRunningFalse' );
-				context.commit( 'resetGamesStarted' );
-				context.commit( 'resetGamesCompleted' );
-				// Update ready state
-				this._vm.$socket.emit( 'updateReady', context.getters.ready );
+			console.log( context.state.running );
+			// If the games arent running, we're going to ignore gameComplete signals
+			if( context.state.running ) {
+				// Update the score to our store
+				context.commit( 'addScore', data );
+				// Increment the games completed
+				context.commit( 'incrementGamesCompleted' );
+				// Update the score to the relevant team
+				context.commit( 'increaseScore', {
+					team: context.getters.teamById( data.teamId ),
+					score: data.score
+				} );
+				// Have all the games that we sent start signals to completed?
+				if( context.state.sessionInfo.gamesCompleted == context.state.sessionInfo.gamesStarted ) {
+					context.commit( 'setRunningFalse' );
+					context.commit( 'resetGamesStarted' );
+					context.commit( 'resetGamesCompleted' );
+					// Update ready state
+					this._vm.$socket.emit( 'updateReady', context.getters.ready );
+					// update remote running state
+					this._vm.$socket.emit( 'updateRunning', context.getters.running );
+				}
+			} else {
+				console.log( 'ignored' );
 			}
 		},
 		SOCKET_updateTeams( context, teams ) {
@@ -208,7 +221,26 @@ export default new Vuex.Store({
 		},
 		nextRound( context ) {
 			const rotatingTeams = context.getters.rotatingTeams;
+			const nonReadyTeams = context.getters.nonReadyTeams;
 			const activeGamesInOrder = context.getters.activeGamesInOrder;
+			// First clear any non-ready teams out of active games
+			if( nonReadyTeams.length > 0 ) {
+				nonReadyTeams.forEach(( team ) => {
+					activeGamesInOrder.forEach(( game ) => {
+						if( game.teamCurrent == team.id ){
+							// Clear out this team's id on the game
+							context.commit( 'clearTeamCurrentOnGame', game );
+							// Clear out the gamecurrent on the team
+							context.commit( 'clearGameCurrentOnTeam', team );
+							// // Assign a blank gameNext for the game
+							// context.commit( 'assignNextTeamToGame', {
+							// 	team: team,
+							// 	gameNext: ''
+							// });
+						}
+					});
+				});
+			}
 			if ( rotatingTeams.length > 0 ) {
 				// Reverse through the active games array
 				for( let i = activeGamesInOrder.length - 1; i >= 0; i-- ) {
@@ -299,6 +331,8 @@ export default new Vuex.Store({
 			});
 			// Set running to true and reset the roundReady flag
 			context.commit( 'setRunningTrue' );
+			// update remote running state
+			this._vm.$socket.emit( 'updateRunning', context.getters.running );
 			context.commit( 'roundReadyFalse' );
 			// Fake a game by timing back in
 			// setTimeout(() => {
