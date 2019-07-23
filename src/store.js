@@ -127,30 +127,24 @@ export default new Vuex.Store({
 	},
 	actions:{
 		SOCKET_gameComplete( context, data ){
-			console.log( context.state.running );
-			// If the games arent running, we're going to ignore gameComplete signals
-			if( context.state.running ) {
-				// Update the score to our store
-				context.commit( 'addScore', data );
-				// Increment the games completed
-				context.commit( 'incrementGamesCompleted' );
-				// Update the score to the relevant team
-				context.commit( 'increaseScore', {
-					team: context.getters.teamById( data.teamId ),
-					score: data.score
-				} );
-				// Have all the games that we sent start signals to completed?
-				if( context.state.sessionInfo.gamesCompleted == context.state.sessionInfo.gamesStarted ) {
-					context.commit( 'setRunningFalse' );
-					context.commit( 'resetGamesStarted' );
-					context.commit( 'resetGamesCompleted' );
-					// Update ready state
-					this._vm.$socket.emit( 'updateReady', context.getters.ready );
-					// update remote running state
-					this._vm.$socket.emit( 'updateRunning', context.getters.running );
-				}
-			} else {
-				console.log( 'ignored' );
+			// Update the score to our store
+			context.commit( 'addScore', data );
+			// Increment the games completed
+			context.commit( 'incrementGamesCompleted' );
+			// Update the score to the relevant team
+			context.commit( 'increaseScore', {
+				team: context.getters.teamById( data.teamId ),
+				score: data.score
+			} );
+			// Have all the games that we sent start signals to completed?
+			if( context.state.sessionInfo.gamesCompleted == context.state.sessionInfo.gamesStarted ) {
+				context.commit( 'setRunningFalse' );
+				context.commit( 'resetGamesStarted' );
+				context.commit( 'resetGamesCompleted' );
+				// Update ready state
+				this._vm.$socket.emit( 'updateReady', context.getters.ready );
+				// update remote running state
+				this._vm.$socket.emit( 'updateRunning', context.getters.running );
 			}
 		},
 		SOCKET_updateTeams( context, teams ) {
@@ -338,6 +332,19 @@ export default new Vuex.Store({
 			// setTimeout(() => {
 			// 	context.commit( 'setRunningFalse' );
 			// }, 5000);
+		},
+		clear( context ){
+			// set running and ready to false
+			context.commit( 'setRunningFalse' );
+			context.commit( 'roundReadyFalse' );
+			// set running and ready to false (on remote)
+			this._vm.$socket.emit( 'updateRunning', context.getters.running );
+			this._vm.$socket.emit( 'updateReady', context.getters.running );
+			// Clear out all teams
+			context.commit( 'setTeams', [] );
+			this._vm.$socket.emit( 'updateTeams', context.getters.teams );
+			// Reset games to default
+			context.dispatch( 'fetchGames' );
 		}
 	},
 	mutations: {

@@ -38,9 +38,7 @@ export default {
 	},
 	methods:{
 		getMessage(){
-			// console.log( this.messages[Math.floor( Math.random * 4 )] );
 			this.message = this.messages[Math.floor( Math.random() * 4 )];
-			console.log( 'what' );
 		}
 	},
 	computed:{
@@ -54,10 +52,6 @@ export default {
 	watch:{
 		roundReady: function(){
 			this.getMessage();
-			// console.log( 'doin' );
-			// console.log( this.messages );
-			// console.log( this.messages[Math.floor( Math.random * 4 )] );
-			// console.log( 'what' );
 		}
 	}
 };

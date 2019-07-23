@@ -32,9 +32,13 @@ Next:
 // BUG: Un-readying and team and hitting next doesnt let you start the next round, also the team should move out of the rotation
 // BUG: Removing teams actually wasnt working
 // BUG: Black hole game complete calls when the round isnt running (needed to do this at the socket server level because this event gets emitted to all screens)
+// --- 7/22/19
+// Add clear button to reset teams, running state, etc, figure out why teams werent resetting on leaderboard
 
 
 Cant "ready" a team if session "ready" is true
 Rely on socket.io messaging to communicate scores to leaderboard terminal
 The Scoreboard and Instructions Screen need to be open before the dashboard loads
 Move settings to action bar and remove menu
+Need to sync teams to update scoreboard?
+

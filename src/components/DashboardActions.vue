@@ -3,6 +3,7 @@
 		<button class="next" v-on:click="nextRound" :disabled="( readyTeams.length === 0 || roundReady ) || roundRunning">Next Round</button>
 		<button class="start" v-on:click="startRound" :disabled="!roundReady || roundRunning">Start Round</button>
 		<p class="running" v-if="roundRunning">Running</p>
+		<a href="#" v-on:click="clear()">Clear</a>
 	</div>
 </template>
 
@@ -24,6 +25,9 @@ export default {
 		},
 		startRound(){
 			this.$store.dispatch( 'startRound' );
+		},
+		clear(){
+			this.$store.dispatch( 'clear' );
 		}
 	},
 	computed:{

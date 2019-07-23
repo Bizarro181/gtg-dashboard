@@ -40,7 +40,7 @@ export default {
 				id: ''
 			},
 			nouns: ["ninjas", "chairs", "pancakes", "statues", "unicorns", "rainbows", "lasers", "senors", "bunnies", "captains", "cupcakes", "carrots", "gnomes", "glitters", "potatoes", "salads", "curtains", "beets", "toilets", "dragons", "jellybeans", "snakes", "dolls", "bushes", "cookies", "apples", "kazoos", "singers", "trampolines", "carousels", "carnival", "locomotives", "balloons", "artisans", "artists", "colorists", "inkers", "coppersmiths", "directors", "designers", "models", "musicians", "pencillers", "producers", "teachers", "mechanics", "beaders","engineers", "millers", "moldmakers", "plants", "bears",],
-			adjs: ["adamant", "boorish", "calamitous", "caustic", "bald", "itchy", "fierce", "great", "massive", "little", "big","fat","skinny","clean","dirty","fancy","fit","gentle","happy","sad","morose","embarrased","gengle","jolly","silly","excellent","breathtaking"]
+			adjs: ["adamant", "boorish", "calamitous", "caustic", "bald", "itchy", "fierce", "great", "massive", "little", "big","fat","skinny","clean","dirty","fancy","fit","gentle","happy","sad","morose","embarrased","rowdy","jolly","silly","excellent","breathtaking", "wandering", "precise", "knowing"]
 		}
 	},
 	methods:{
