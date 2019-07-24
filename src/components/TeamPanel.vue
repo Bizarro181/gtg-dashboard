@@ -23,6 +23,7 @@
 		<form v-on:submit.prevent="addTeam">
 			<input type="text" v-model="teamData.name" placeholder="Team Name" />
 			<input type="text" v-model="teamData.emails" placeholder="Email(s)" />
+			<input type="text" v-model="teamData.members" placeholder="Members" />
 			<button type="submit">Add</button>
 		</form>
 	</div>
@@ -37,7 +38,8 @@ export default {
 			teamData:{
 				name: '',
 				emails: '',
-				id: ''
+				id: '',
+				members:1
 			},
 			nouns: ["ninjas", "chairs", "pancakes", "statues", "unicorns", "rainbows", "lasers", "senors", "bunnies", "captains", "cupcakes", "carrots", "gnomes", "glitters", "potatoes", "salads", "curtains", "beets", "toilets", "dragons", "jellybeans", "snakes", "dolls", "bushes", "cookies", "apples", "kazoos", "singers", "trampolines", "carousels", "carnival", "locomotives", "balloons", "artisans", "artists", "colorists", "inkers", "coppersmiths", "directors", "designers", "models", "musicians", "pencillers", "producers", "teachers", "mechanics", "beaders","engineers", "millers", "moldmakers", "plants", "bears",],
 			adjs: ["adamant", "boorish", "calamitous", "caustic", "bald", "itchy", "fierce", "great", "massive", "little", "big","fat","skinny","clean","dirty","fancy","fit","gentle","happy","sad","morose","embarrased","rowdy","jolly","silly","excellent","breathtaking", "wandering", "precise", "knowing"]
@@ -52,11 +54,13 @@ export default {
 				{
 					name: this.teamData.name,
 					emails: this.teamData.emails.split( ',' ),
+					members: this.teamData.members
 				}
 			);
 			this.teamData.name = '';
 			this.teamData.emails = '';
 			this.teamData.ready = '';
+			this.teamData.members = 1;
 		},
 		validateReady( index, event ){
 			event.preventDefault();

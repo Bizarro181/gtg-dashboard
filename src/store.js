@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import * as fb from '@/firebase.js';
 import uuidv3 from 'uuid/v3';
+import axios from 'axios';
 
 // Generate our UUID namespaces
 const rootNamespace = '8a529469-9676-4682-9a5f-466df3938395';
@@ -175,12 +176,18 @@ export default new Vuex.Store({
 			});
 		},
 		removeGame( context, id ) {
-			fb.gamesCollection.doc( id ).delete().then( () => {
-				let index = context.state.games.findIndex((element, index, array) => {
-					return element.id == id;
+			fb.gamesCollection.where( 'id', '==', id )
+				.get()
+				.then(querySnapshot => {
+					querySnapshot.forEach( doc => {
+						fb.gamesCollection.doc( doc.id ).delete().then( () => {
+							let index = context.state.games.findIndex((element, index, array) => {
+								return element.id == id;
+							});
+							context.commit( 'removeGame', index );
+						});
+					})
 				});
-				context.commit( 'removeGame', index );
-			});
 		},
 		addGame( context, game ) {
 			// Get the creation timestamp
@@ -310,6 +317,18 @@ export default new Vuex.Store({
 			});
 			// Move next game to current game and empty out next game
 			activeFilledGames.forEach(( game ) => {
+				// Make a call to the "game"
+				console.log( game.teamNext );
+				console.log( context.getters.teamById( game.teamNext ) );
+				axios({
+					method: 'post',
+					url: 'http://' + game.address + '/start-game',
+					data:{
+						teamId: game.teamNext,
+						members: context.getters.teamById( game.teamNext ).members,
+						teamName: context.getters.teamById( game.teamNext ).name
+					}
+				});
 				context.commit( 'startSingleGame', {
 					game: game,
 					nextTeam: game.teamNext

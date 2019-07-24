@@ -12,7 +12,7 @@ const firebaseApp = firebase.initializeApp({
 });
 
 const firestore = firebaseApp.firestore();
-firestore.enablePersistence();
+// firestore.enablePersistence();
 // firestore.disableNetwork();
 
 const gamesCollection = firestore.collection( 'games' );

@@ -3,7 +3,7 @@
 		<h1>GameList</h1>
 		<ul class="gamesList">
 			<li class="gameItem" v-for="game in games">
-				<p class="gameName">{{ game.name }}</p>
+				<p class="gameName">{{ game.name }}{{ game.id }}</p>
 				<div class="actions">
 					<button v-on:click="removeGame(game.id)">Remove</button>
 				</div>
@@ -11,6 +11,7 @@
 		</ul>
 		<form v-on:submit.prevent="addGame">
 			<input type="text" v-model="gameData.name" placeholder="Game Name" />
+			<input type="text" v-model="gameData.address" placeholder="Address" />
 			<input type="text" v-model="gameData.order" placeholder="Order" />
 			<button type="submit">Add</button>
 		</form>
@@ -25,15 +26,22 @@ export default {
 				name: '',
 				order: '',
 				active: true,
-				id: ''
+				id: '',
+				address: 'localhost:2021'
 			}
 		}
 	},
 	methods:{
 		addGame(){
-			this.$store.dispatch( 'addGame', {name: this.gameData.name, order: this.gameData.order, active: true} );
+			this.$store.dispatch( 'addGame', {
+				name: this.gameData.name,
+				order: this.gameData.order,
+				active: true,
+				address: this.gameData.address
+			});
 			this.gameData.name = '';
 			this.gameData.order = '';
+			this.gameData.order = 'localhost:2021';
 		},
 		removeGame( id ){
 			this.$store.dispatch( 'removeGame', id );
