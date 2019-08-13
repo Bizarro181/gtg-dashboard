@@ -43,6 +43,10 @@ Next:
 // Create a express server to fake communication to the machines
 // Need to store IP for each game in settings and use that to tell the game to start
 // BUG: Deleting games doesnt work since now the ID is not the Firebase ID
+// -- 7/30/19
+// 
+
+3:50 - 6:00
 
 
 Cant "ready" a team if session "ready" is true
@@ -51,4 +55,20 @@ The Scoreboard and Instructions Screen need to be open before the dashboard load
 Move settings to action bar and remove menu
 Need to sync teams to update scoreboard?
 
+---- Notes from 7/25 meeting:
+endpoints for pause restart and reset, and game start, resume, end game, stop, heartbeat
+make state for games that are inactive
+edit score
+drag and drop - assign teams, lock teams, start round
+unreadying a team should not wipe their score from the board
 
+
+== start-game (from D to G)
+```
+{"teamId":"7fb7a3d7-f424-375e-b1a9-f58e40a01d23","members":2,"teamName":"itchy plants"}
+```
+
+=== game-complete (from G to D)
+```
+{"teamId": "44d3c629-447b-34ec-82ac-05c051194694","score": 10, "teamName": "Robert" }
+```

@@ -163,17 +163,22 @@ export default new Vuex.Store({
 		},
 		fetchGames( context ) {
 			let games = [];
-			fb.gamesCollection.get().then( querySnapshot => {
-				querySnapshot.forEach( doc => {
-					let game = doc.data();
-					game.teamCurrent = '';
-					game.teamNext = '';
-					games.push( game );
+			return new Promise(( resolve, reject ) => {
+				fb.gamesCollection.get().then( querySnapshot => {
+					querySnapshot.forEach( doc => {
+						let game = doc.data();
+						game.teamCurrent = '';
+						game.teamNext = '';
+						game.status = 'idle';
+						games.push( game );
+					});
+					context.commit( 'setGames', games );
+					resolve();
+					// Update games socket
+					this._vm.$socket.emit( 'updateGames', context.getters.gamesInOrder );
 				});
-				context.commit( 'setGames', games );
-				// Update games socket
-				this._vm.$socket.emit( 'updateGames', context.getters.gamesInOrder );
 			});
+			
 		},
 		removeGame( context, id ) {
 			fb.gamesCollection.where( 'id', '==', id )
@@ -322,7 +327,7 @@ export default new Vuex.Store({
 				console.log( context.getters.teamById( game.teamNext ) );
 				axios({
 					method: 'post',
-					url: 'http://' + game.address + '/start-game',
+					url: 'http://' + game.address + '/StartGame',
 					data:{
 						teamId: game.teamNext,
 						members: context.getters.teamById( game.teamNext ).members,
@@ -351,6 +356,17 @@ export default new Vuex.Store({
 			// setTimeout(() => {
 			// 	context.commit( 'setRunningFalse' );
 			// }, 5000);
+		},
+		checkStatus( context, id ) {
+			// Make this generic to accept a route
+			let game = context.getters.gameById( id );
+			axios({
+				method: 'post',
+				url: 'http://' + game.address + '/Status'
+			}).then(( res ) => {
+				console.log( res.data.status );
+				// Make a mutation for updating status
+			});
 		},
 		clear( context ){
 			// set running and ready to false

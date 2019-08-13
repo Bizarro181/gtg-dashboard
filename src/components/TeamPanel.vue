@@ -4,7 +4,7 @@
 			<li v-for="( team, index ) in teams" class="teamItem" v-bind:class="{ ready: team.ready }">
 				<div class="teamInfo">
 					<div class="teamInfoWrapper">
-						<p class="teamName">{{ team.name }}</p>
+						<p class="teamName">{{ team.name }}{{ team.id }}</p>
 						<p class="points"><span class="bold">{{ scoresById( team.id ) ? scoresById( team.id ) : 0 }}</span> points</p>
 						<p class="gamesPlayed"><span class="bold">{{ scoreCountById( team.id ) ? scoreCountById( team.id ) : 0 }}</span> {{ gamesText( scoreCountById( team.id ) ) }} played</p>
 					</div>
@@ -41,7 +41,7 @@ export default {
 				id: '',
 				members:1
 			},
-			nouns: ["ninjas", "chairs", "pancakes", "statues", "unicorns", "rainbows", "lasers", "senors", "bunnies", "captains", "cupcakes", "carrots", "gnomes", "glitters", "potatoes", "salads", "curtains", "beets", "toilets", "dragons", "jellybeans", "snakes", "dolls", "bushes", "cookies", "apples", "kazoos", "singers", "trampolines", "carousels", "carnival", "locomotives", "balloons", "artisans", "artists", "colorists", "inkers", "coppersmiths", "directors", "designers", "models", "musicians", "pencillers", "producers", "teachers", "mechanics", "beaders","engineers", "millers", "moldmakers", "plants", "bears",],
+			nouns: ["ninjas", "chairs", "pancakes", "statues", "unicorns", "rainbows", "lasers", "senors", "bunnies", "captains", "cupcakes", "carrots", "gnomes", "glitters", "potatoes", "salads", "curtains", "beets", "toilets", "dragons", "jellybeans", "snakes", "dolls", "bushes", "cookies", "apples", "kazoos", "singers", "trampolines", "carousels", "carnival", "locomotives", "balloons", "artisans", "artists", "colorists", "inkers", "coppersmiths", "directors", "designers", "models", "musicians", "pencillers", "producers", "teachers", "mechanics", "beaders","engineers", "millers", "moldmakers", "plants", "bears", "pilots", "fletchers"],
 			adjs: ["adamant", "boorish", "calamitous", "caustic", "bald", "itchy", "fierce", "great", "massive", "little", "big","fat","skinny","clean","dirty","fancy","fit","gentle","happy","sad","morose","embarrased","rowdy","jolly","silly","excellent","breathtaking", "wandering", "precise", "knowing"]
 		}
 	},

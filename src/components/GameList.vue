@@ -3,7 +3,7 @@
 		<h1>GameList</h1>
 		<ul class="gamesList">
 			<li class="gameItem" v-for="game in games">
-				<p class="gameName">{{ game.name }}{{ game.id }}</p>
+				<p class="gameName">{{ game.name }}</p>
 				<div class="actions">
 					<button v-on:click="removeGame(game.id)">Remove</button>
 				</div>
@@ -41,7 +41,7 @@ export default {
 			});
 			this.gameData.name = '';
 			this.gameData.order = '';
-			this.gameData.order = 'localhost:2021';
+			this.gameData.address = 'localhost:2021';
 		},
 		removeGame( id ){
 			this.$store.dispatch( 'removeGame', id );

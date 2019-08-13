@@ -1,7 +1,8 @@
 <template>
 	<div class="hello">
 		<ul class="gameGrid" v-bind:class="{ isRunning: roundRunning }">
-			<li class="gameItem" v-for="game in games">
+			<li class="gameItem" v-for="game in games" v-bind:class="{ open: isOpen(game.id)}">
+				<div class="gameSettingsToggle" v-on:click="toggleOpen( game.id )">*</div>
 				<p class="gameName">{{ game.name }}</p>
 				<p class="info" v-if="game.teamNext !== ''">
 					<span class="teamName" v-if="teamById( game.teamNext )">{{ teamById( game.teamNext ).name }}</span><br>
@@ -12,6 +13,41 @@
 					<span class="stateLabel">Current Team</span>
 				</p>
 				<p class="info empty" v-if="game.teamNext == '' && game.teamCurrent == ''">Empty</p>
+				<div class="gameSettings">
+					<p class="status">{{ game.status }}</p>
+					<ul class="settingActions">
+						<li>
+							<button 
+								v-bind:disabled="game.status !== 'running'"
+								v-if="game.status !== 'paused'">
+								Pause
+							</button>
+							<button 
+								v-if="game.status == 'paused'">
+								Resume
+							</button>
+						</li>
+						<li>
+							<button 
+								v-bind:disabled="game.status == 'idle' || game.status == 'ending'">
+								End Game
+							</button>
+						</li>
+						<li>
+							<button
+								v-bind:disabled="game.status !== 'running'">
+								Stop
+							</button>
+						</li>
+						<li>
+							<button
+								v-on:click="checkStatus( game.id )">
+								Check Status
+							</button>
+						</li>
+					</ul>
+					<div class="gameSettingsClose" v-on:click="toggleOpen( game.id )">X</div>
+				</div>
 			</li>
 		</ul>
 	</div>
@@ -23,6 +59,7 @@ import { mapGetters } from 'vuex';
 export default {
 	data(){
 		return {
+			ui:[],
 			gameData:{
 				name: '',
 				order: '',
@@ -39,6 +76,21 @@ export default {
 		},
 		removeGame( id ){
 			this.$store.dispatch( 'removeGame', id );
+		},
+		isOpen( id ){
+			let uiElement = this.ui.find(( element ) => {
+				return element.id == id;
+			});
+			return uiElement.menuOpen;
+		},
+		toggleOpen( id ){
+			let uiElementIndex = this.ui.findIndex((element) => {
+				return element.id == id;
+			});
+			this.ui[uiElementIndex].menuOpen = !this.ui[uiElementIndex].menuOpen;
+		},
+		checkStatus( id ) {
+			this.$store.dispatch( 'checkStatus', id );
 		}
 	},
 	computed:{
@@ -50,7 +102,14 @@ export default {
 	},
 
 	created(){
-		this.$store.dispatch( 'fetchGames' );
+		this.$store.dispatch( 'fetchGames' ).then(() => {
+			this.games.forEach(( val ) => {
+				this.ui.push({
+					id: val.id,
+					menuOpen: false
+				});
+			});
+		});		
 	}
 };
 </script>
@@ -84,9 +143,27 @@ export default {
 	display:flex;
 	flex-direction:column;
 	justify-content:space-around;
+	position:relative;
+	overflow:hidden;
 
 	&:last-child{
 		border-bottom:1px solid #cacaca;
+	}
+
+	&:hover{
+		.gameSettingsToggle{
+			opacity:1;
+		}
+	}
+
+	&.open{
+		.gameSettingsToggle{
+			display:none;
+		}
+
+		.gameSettings{
+			display:block;
+		}
 	}
 }
 
@@ -118,5 +195,45 @@ export default {
 .id{
 	font-style:italic;
 	font-size:10px;
+}
+.gameSettingsToggle{
+	opacity:0;
+	border:1px solid #cacaca;
+	padding:3px;
+	text-align:center;
+	position:absolute;
+	width:15px;
+	height:15px;
+	top:10px;
+	right:10px;
+	border-radius:3px;
+	box-shadow:0px 1px 2px #cacaca;
+	cursor:pointer;
+	transition:all 0.15s ease;
+
+	&:hover{
+		box-shadow:0px 1px 6px #cacaca;
+	}
+}
+
+.gameSettingsClose{
+	position:absolute;
+	width:15px;
+	height:15px;
+	top:10px;
+	right:10px;
+	text-align:center;
+}
+
+.gameSettings{
+	position:absolute;
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+	background:rgba( #000000, 0.65 );
+	display:none;
+	color:#ffffff;
+	padding:20px;
 }
 </style>
