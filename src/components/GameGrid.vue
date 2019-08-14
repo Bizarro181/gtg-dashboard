@@ -14,34 +14,38 @@
 				</p>
 				<p class="info empty" v-if="game.teamNext == '' && game.teamCurrent == ''">Empty</p>
 				<div class="gameSettings">
-					<p class="status">{{ game.status }}</p>
+					<p class="status" v-bind:class="game.status"><span class="indicator"></span>{{ game.status }}</p>
 					<ul class="settingActions">
-						<li>
+						<li class="settingActionItem">
 							<button 
+								v-on:click="talkToGame( game.id, 'Pause' )"
 								v-bind:disabled="game.status !== 'running'"
 								v-if="game.status !== 'paused'">
 								Pause
 							</button>
 							<button 
+								v-on:click="talkToGame( game.id, 'Resume' )"
 								v-if="game.status == 'paused'">
 								Resume
 							</button>
 						</li>
-						<li>
+						<li class="settingActionItem">
 							<button 
+								v-on:click="talkToGame( game.id, 'EndGame' )"
 								v-bind:disabled="game.status == 'idle' || game.status == 'ending'">
 								End Game
 							</button>
 						</li>
-						<li>
+						<li class="settingActionItem">
 							<button
+								v-on:click="talkToGame( game.id, 'Reset' )"
 								v-bind:disabled="game.status !== 'running'">
 								Stop
 							</button>
 						</li>
-						<li>
+						<li class="settingActionItem">
 							<button
-								v-on:click="checkStatus( game.id )">
+								v-on:click="talkToGame( game.id, 'Status' )">
 								Check Status
 							</button>
 						</li>
@@ -88,6 +92,12 @@ export default {
 				return element.id == id;
 			});
 			this.ui[uiElementIndex].menuOpen = !this.ui[uiElementIndex].menuOpen;
+		},
+		talkToGame( id, action ){
+			this.$store.dispatch( 'talkToGame', {
+				id: id,
+				route: action
+			});
 		},
 		checkStatus( id ) {
 			this.$store.dispatch( 'checkStatus', id );
@@ -231,9 +241,71 @@ export default {
 	right:0px;
 	top:0px;
 	bottom:0px;
-	background:rgba( #000000, 0.65 );
+	background:rgba( #2A4365, 0.90 );
 	display:none;
 	color:#ffffff;
 	padding:20px;
+}
+
+.status{
+	text-transform:capitalize;
+	margin:0px 0px 20px 0px;
+	text-align:center;
+
+	&.error{
+		.indicator{
+			background:#C53030;
+			box-shadow:0px 0px 5px #F56565;
+		}
+	}
+
+	&.idle{
+		.indicator{
+			background:#9AE6B4;
+			box-shadow:0px 0px 5px #F0FFF4;
+		}
+	}
+
+	&.running{
+		.indicator{
+			background:#2F855A;
+			box-shadow:0px 0px 5px #48BB78;
+		}
+	}
+
+	&.paused{
+		.indicator{
+			background:#F6E05E;
+			box-shadow:0px 0px 5px #FEFCBF;
+		}
+	}
+
+	&.ending{
+		.indicator{
+			background:#DD6B20;
+			box-shadow:0px 0px 5px #F6AD55;
+		}
+	}
+}
+
+.indicator{
+	display:inline-block;
+	height:10px;
+	width:10px;
+	background:#ffffff;
+	border-radius:100%;
+	margin-right:8px;
+}
+
+.settingActions{
+	list-style:none;
+	margin:0px;
+	padding:0px;
+	text-align:center;
+}
+
+.settingActionItem{
+	padding:2px;
+	display:inline;
 }
 </style>

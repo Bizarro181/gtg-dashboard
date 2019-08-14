@@ -44,7 +44,12 @@ Next:
 // Need to store IP for each game in settings and use that to tell the game to start
 // BUG: Deleting games doesnt work since now the ID is not the Firebase ID
 // -- 7/30/19
-// 
+// Added in some status display menu basics for each game
+// -- 8/12/19
+// Buttons! and faking more game endpoints and working on game communication
+// -- 8/13/19
+// Get a base down for the status communcation to games
+// Make the buttons and game config a bit prettier, test out statuses
 
 3:50 - 6:00
 
@@ -56,11 +61,28 @@ Move settings to action bar and remove menu
 Need to sync teams to update scoreboard?
 
 ---- Notes from 7/25 meeting:
-endpoints for pause restart and reset, and game start, resume, end game, stop, heartbeat
+// endpoints for pause restart and reset, and game start, resume, end game, stop, heartbeat
 make state for games that are inactive
-edit score
-drag and drop - assign teams, lock teams, start round
+NEXT: edit score
+NEXT: drag and drop - assign teams, lock teams, start round
 unreadying a team should not wipe their score from the board
+NEXT: Actions need to be Rotate Teams, Lock Teams, Start Round
+ - Rotate Teams rotates the active teams into active games, during this phase teams can no longer be added to the games, but teams can be re-arranged
+ - Lock Teams - locks the teams into the games (teams can no longer be added or re-arranged) and presents the assignments to the instructions view
+ - Start Round - Does the same thing as it did before
+
+Game Statuses (should be available from a /status endpoint)
+idle - Idle, waiting to recieve order
+running - Actively running a game
+paused - Paused during a game
+ending - Wrapping up the game showing score/end video/etc
+error - No reponse from game or any error (for now)
+
+A status of "error" should put the game into a "not ready" state, moving a game from "not ready" to "ready" should check the game's status while doing so
+
+Questions?
+ - Should we be able to restart/resume a stopped/reset game (my assumption is no - if no then a reset/stop needs to trigger a resolution of that game so the round can finish)
+ - if a game is "ending" do we want to be able to pause (my assumption in no, the game is already over)
 
 
 == start-game (from D to G)

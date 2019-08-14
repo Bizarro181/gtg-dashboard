@@ -333,6 +333,11 @@ export default new Vuex.Store({
 						members: context.getters.teamById( game.teamNext ).members,
 						teamName: context.getters.teamById( game.teamNext ).name
 					}
+				}).then(( res ) => {
+					context.commit( 'updateGameStatus', {
+						game: game,
+						status: res.data.status
+					});
 				});
 				context.commit( 'startSingleGame', {
 					game: game,
@@ -357,15 +362,21 @@ export default new Vuex.Store({
 			// 	context.commit( 'setRunningFalse' );
 			// }, 5000);
 		},
-		checkStatus( context, id ) {
-			// Make this generic to accept a route
-			let game = context.getters.gameById( id );
+		talkToGame( context, payload ) {
+			let game = context.getters.gameById( payload.id );
 			axios({
 				method: 'post',
-				url: 'http://' + game.address + '/Status'
+				url: 'http://' + game.address + '/' + payload.route
 			}).then(( res ) => {
-				console.log( res.data.status );
-				// Make a mutation for updating status
+				context.commit( 'updateGameStatus', {
+					game: game,
+					status: res.data.status
+				});
+			}).catch(( error ) => {
+				context.commit( 'updateGameStatus', {
+					game: game,
+					status: 'error'
+				});
 			});
 		},
 		clear( context ){
@@ -383,6 +394,9 @@ export default new Vuex.Store({
 		}
 	},
 	mutations: {
+		updateGameStatus( state, payload ) {
+			payload.game.status = payload.status;
+		},
 		addTeam(state, team) {
 			state.teams.push( team );
 		},
