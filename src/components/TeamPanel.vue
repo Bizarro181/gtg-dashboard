@@ -5,7 +5,7 @@
 				<div class="teamInfo">
 					<div class="teamInfoWrapper">
 						<p class="teamName">{{ team.name }}{{ team.id }}</p>
-						<p class="points"><span class="bold">{{ scoresById( team.id ) ? scoresById( team.id ) : 0 }}</span> points</p>
+						<p class="points"><input class="inactiveTextArea" v-bind:value="scoresById( team.id ) ? scoresById( team.id ) : 0" v-on:blur="updateScore( team, $event )"> points</p>
 						<p class="gamesPlayed"><span class="bold">{{ scoreCountById( team.id ) ? scoreCountById( team.id ) : 0 }}</span> {{ gamesText( scoreCountById( team.id ) ) }} played</p>
 					</div>
 					<div class="teamActions">
@@ -94,6 +94,13 @@ export default {
 			if( !this.teams[teamIndex].ready ){
 				this.$store.commit( 'removeTeam', teamIndex );
 			}
+		},
+		updateScore( team, event ) {
+			console.log( event.target.value );
+			this.$store.dispatch( 'updateTeamScore', {
+				team: team,
+				score: event.target.value
+			});
 		}
 	},
 	computed:{
@@ -173,6 +180,20 @@ export default {
 		font-style:italic;
 		font-size:smaller;
 		color:#6d6c6c;
+	}	
+
+	.inactiveTextArea{
+		background-color:transparent;
+		width:25px;
+		display:inline;
+		padding:0px;
+		border:none;
+		box-shadow:none;
+		font-family:'Avenir', Helvetica, Arial, sans-serif;
+		font-size:inherit;
+		font-style:inherit;
+		font-weight:bold;
+		color:inherit;
 	}
 
 	.gamesPlayed{

@@ -119,7 +119,7 @@ export default new Vuex.Store({
 			return ( id ) => {
 				if( state.scores.length > 0 ) {
 					// Filter by id, map to only the score and reduce it to the sum
-					return state.scores.filter( score => score.teamId === id ).length;
+					return state.scores.filter( score => ( score.teamId === id && !( 'exclude' in score ) )  ).length;
 				} else {
 					return false;
 				}
@@ -391,6 +391,19 @@ export default new Vuex.Store({
 			this._vm.$socket.emit( 'updateTeams', context.getters.teams );
 			// Reset games to default
 			context.dispatch( 'fetchGames' );
+		},
+		updateTeamScore( context, payload ) {
+			let currentScore = context.getters.scoresById( payload.team.id );
+			let newScore = payload.score;
+			let difference = newScore - currentScore;
+			context.commit( 'addScore', {
+				teamId: payload.team.id,
+				score: difference,
+				exclude: true
+			});
+			// Get the team's current score
+			// Find out the difference with the passed score
+			// Push a score to the score object that's an adjustment, this gets thrown out when calculating games played
 		}
 	},
 	mutations: {
