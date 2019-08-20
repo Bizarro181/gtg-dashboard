@@ -49,7 +49,7 @@ export default {
 	display:flex;
 	align-items:center;
 	padding:10px;
-	background:#42b983;
+	background:#4299E1;
 	flex-direction:flex-end;
 }
 </style>

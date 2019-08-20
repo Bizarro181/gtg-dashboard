@@ -1,8 +1,8 @@
 <template>
 	<div class="actionWrapper">
-		<button class="next" v-on:click="nextRound" :disabled="( readyTeams.length === 0 || roundReady ) || roundRunning">Rotate Teams</button>
-		<button class="next" v-on:click="lockTeams" :disabled="( readyTeams.length === 0 || roundReady ) || roundRunning">Lock Teams</button>
-		<button class="start" v-on:click="startRound" :disabled="!roundReady || roundRunning">Start Round</button>
+		<button class="rotate" v-on:click="nextRound" :disabled="( readyTeams.length === 0 || roundReady ) || roundRunning">Rotate Teams</button>
+		<button class="lock" v-on:click="lockTeams" :disabled=" !roundReady || roundRunning || teamsLocked ">Lock Teams</button>
+		<button class="start" v-on:click="startRound" :disabled="!teamsLocked || roundRunning">Start Round</button>
 		<p class="running" v-if="roundRunning">Running</p>
 		<a href="#" v-on:click="clear()">Clear</a>
 	</div>
@@ -23,7 +23,7 @@ export default {
 	methods:{
 		lockTeams(){
 			this.$store.dispatch( 'lockTeams' );
-		}
+		},
 		nextRound(){
 			this.$store.dispatch( 'nextRound' );
 		},
@@ -43,6 +43,9 @@ export default {
 		},
 		roundRunning(){
 			return this.$store.getters.running;
+		},
+		teamsLocked(){
+			return this.$store.getters.locked;
 		}
 	}
 };
@@ -66,12 +69,17 @@ button{
 	}
 }
 .start{
-	background:#0061ff;
+	background:#48BB78;
 	color:white;
 	cursor:pointer;	
 }
-.next{
-	background:orange;
+.lock{
+	background:#ED8936;
+	color:white;
+	cursor:pointer;
+}
+.rotate{
+	background:#ECC94B;
 	color:white;
 	cursor:pointer;
 }

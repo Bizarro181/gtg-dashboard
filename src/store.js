@@ -16,6 +16,7 @@ export default new Vuex.Store({
 		session: '',
 		running: false,
 		ready: false,
+		locked: false,
 		teams:[],
 		games:[],
 		assignments:[],
@@ -105,6 +106,9 @@ export default new Vuex.Store({
 		running( state ){
 			return state.running;
 		},
+		locked( state ){
+			return state.locked;
+		},
 		scoresById( state, getters ) {
 			return ( id ) => {
 				if( state.scores.length > 0 ) {
@@ -144,6 +148,7 @@ export default new Vuex.Store({
 				context.commit( 'setRunningFalse' );
 				context.commit( 'resetGamesStarted' );
 				context.commit( 'resetGamesCompleted' );
+				context.commit( 'updateLockTeams', false );
 				// Update ready state
 				this._vm.$socket.emit( 'updateReady', context.getters.ready );
 				// update remote running state
@@ -232,6 +237,9 @@ export default new Vuex.Store({
 			context.commit( 'addTeam', team );
 			// Update the remote
 			fb.teamsCollection.add( team );
+		},
+		lockTeams( context ) {
+			context.commit( 'updateLockTeams', true );
 		},
 		nextRound( context ) {
 			const rotatingTeams = context.getters.rotatingTeams;
@@ -497,6 +505,9 @@ export default new Vuex.Store({
 		},
 		increaseScore( state, payload ){
 			payload.team.score += payload.score;
+		},
+		updateLockTeams( state, payload ){
+			state.locked = payload;
 		}
 	}
 })
