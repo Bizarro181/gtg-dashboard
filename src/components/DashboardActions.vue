@@ -1,6 +1,7 @@
 <template>
 	<div class="actionWrapper">
-		<button class="next" v-on:click="nextRound" :disabled="( readyTeams.length === 0 || roundReady ) || roundRunning">Next Round</button>
+		<button class="next" v-on:click="nextRound" :disabled="( readyTeams.length === 0 || roundReady ) || roundRunning">Rotate Teams</button>
+		<button class="next" v-on:click="lockTeams" :disabled="( readyTeams.length === 0 || roundReady ) || roundRunning">Lock Teams</button>
 		<button class="start" v-on:click="startRound" :disabled="!roundReady || roundRunning">Start Round</button>
 		<p class="running" v-if="roundRunning">Running</p>
 		<a href="#" v-on:click="clear()">Clear</a>
@@ -20,6 +21,9 @@ export default {
 		}
 	},
 	methods:{
+		lockTeams(){
+			this.$store.dispatch( 'lockTeams' );
+		}
 		nextRound(){
 			this.$store.dispatch( 'nextRound' );
 		},

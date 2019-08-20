@@ -50,6 +50,11 @@ Next:
 // -- 8/13/19
 // Get a base down for the status communcation to games
 // Make the buttons and game config a bit prettier, test out statuses
+// -- 8/14/19
+// Editing a score works without increasing the games played
+// -- 8/19/19
+// Make edited scores reflect across dashboards
+// Fix "bug" about scores not working - stupid css issue
 
 3:50 - 6:00
 
@@ -63,7 +68,9 @@ Need to sync teams to update scoreboard?
 ---- Notes from 7/25 meeting:
 // endpoints for pause restart and reset, and game start, resume, end game, stop, heartbeat
 make state for games that are inactive
-NEXT: edit score
+// NEXT: edit score
+// Next: editing a score needs to communicate with the server (need a new listener cant piggyback off of gamecomplete)
+// NEXT: look into why running a score initially doesnt work
 NEXT: drag and drop - assign teams, lock teams, start round
 unreadying a team should not wipe their score from the board
 NEXT: Actions need to be Rotate Teams, Lock Teams, Start Round
@@ -81,8 +88,8 @@ error - No reponse from game or any error (for now)
 A status of "error" should put the game into a "not ready" state, moving a game from "not ready" to "ready" should check the game's status while doing so
 
 Questions?
- - Should we be able to restart/resume a stopped/reset game (my assumption is no - if no then a reset/stop needs to trigger a resolution of that game so the round can finish)
- - if a game is "ending" do we want to be able to pause (my assumption in no, the game is already over)
+ - Should we be able to restart/resume a stopped/reset game (my assumption is no - if no then a reset/stop needs to trigger a resolution of that game so the round can finish) - no
+ - if a game is "ending" do we want to be able to pause (my assumption in no, the game is already over) - no
 
 
 == start-game (from D to G)
@@ -94,3 +101,14 @@ Questions?
 ```
 {"teamId": "44d3c629-447b-34ec-82ac-05c051194694","score": 10, "teamName": "Robert" }
 ```
+
+
+Dump Logs - games will automatically dump logs directly to the server
+ - Maybe in the future dashboard can access logs directly from the server
+
+// Send Frank statuses
+
+Greg: do we need to know in-game stats as they occur (time elapsed, score, etc)
+
+Health Check
+server needs enpoint for health check: degreded: and recieve a text message back of the current

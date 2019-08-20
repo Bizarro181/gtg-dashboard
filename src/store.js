@@ -133,6 +133,8 @@ export default new Vuex.Store({
 			// Increment the games completed
 			context.commit( 'incrementGamesCompleted' );
 			// Update the score to the relevant team
+			console.log( data.teamId );
+			console.log( context.getters.teamById( data.teamId ) );
 			context.commit( 'increaseScore', {
 				team: context.getters.teamById( data.teamId ),
 				score: data.score
@@ -153,6 +155,12 @@ export default new Vuex.Store({
 		},
 		SOCKET_updateGames( context, games ) {
 			context.commit( 'setGames', games )
+		},
+		/**
+		 * Update the scores in the store when we get the updateScores websocket event
+		 */
+		SOCKET_updateScores( context, scores ) {
+			context.commit( 'setScores', scores );
 		},
 		SOCKET_updateReady( context, ready ) {
 			if ( ready ) {
@@ -401,6 +409,7 @@ export default new Vuex.Store({
 				score: difference,
 				exclude: true
 			});
+			this._vm.$socket.emit( 'updateScores', context.state.scores );
 			// Get the team's current score
 			// Find out the difference with the passed score
 			// Push a score to the score object that's an adjustment, this gets thrown out when calculating games played
@@ -470,6 +479,9 @@ export default new Vuex.Store({
 		},
 		addScore( state, scoreData ) {
 			state.scores.push( scoreData );
+		},
+		setScores( state, scores ) {
+			state.scores = scores;
 		},
 		incrementGamesStarted( state ) {
 			state.sessionInfo.gamesStarted++;
