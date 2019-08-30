@@ -18,13 +18,13 @@
 					<ul class="settingActions">
 						<li class="settingActionItem">
 							<button 
-								v-on:click="talkToGame( game.id, 'Pause' )"
+								v-on:click="talkToGame( game.id, 'pause' )"
 								v-bind:disabled="game.status !== 'running'"
 								v-if="game.status !== 'paused'">
 								Pause
 							</button>
 							<button 
-								v-on:click="talkToGame( game.id, 'Resume' )"
+								v-on:click="talkToGame( game.id, 'resume' )"
 								v-if="game.status == 'paused'">
 								Resume
 							</button>
@@ -38,14 +38,14 @@
 						</li>
 						<li class="settingActionItem">
 							<button
-								v-on:click="talkToGame( game.id, 'Reset' )"
+								v-on:click="talkToGame( game.id, 'reset' )"
 								v-bind:disabled="game.status !== 'running'">
 								Stop
 							</button>
 						</li>
 						<li class="settingActionItem">
 							<button
-								v-on:click="talkToGame( game.id, 'Status' )">
+								v-on:click="talkToGame( game.id, 'status' )">
 								Check Status
 							</button>
 						</li>

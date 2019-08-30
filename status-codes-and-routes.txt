@@ -1,0 +1,29 @@
+Dashboard Sends
+
+/start
+
+{
+	"teamId": "6a6e0979-bf65-35b3-83d5-e87dd73b17f8",
+	"members": 5,
+	"teamName": "Red Cats",
+}
+
+
+/pause
+/resume
+/reset
+/status
+
+Dashboard Expects
+
+{
+	status: "ok" 
+}
+
+Possible Status Codes
+
+idle - waiting to receive order, not running game
+running - Actively running a game
+paused - Paused during a game
+error - No response from game, a 500 response from the game, or any error that would prevent the game from running
+degraded - the game's internal health check has run into an issue but the game can probably still run

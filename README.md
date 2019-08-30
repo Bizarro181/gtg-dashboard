@@ -55,6 +55,9 @@ Next:
 // -- 8/19/19
 // Make edited scores reflect across dashboards
 // Fix "bug" about scores not working - stupid css issue
+// -- 8/20/19
+// Update actions for starting a game to include a "Lock teams" state
+// Look into drag and drop libraries
 
 3:50 - 6:00
 
@@ -67,16 +70,22 @@ Need to sync teams to update scoreboard?
 
 ---- Notes from 7/25 meeting:
 // endpoints for pause restart and reset, and game start, resume, end game, stop, heartbeat
-make state for games that are inactive
 // NEXT: edit score
 // Next: editing a score needs to communicate with the server (need a new listener cant piggyback off of gamecomplete)
 // NEXT: look into why running a score initially doesnt work
+// NEXT: Actions need to be Rotate Teams, Lock Teams, Start Round
+// - Rotate Teams rotates the active teams into active games, during this phase teams can no longer be added to the games, but teams can be re-arranged
+// - Lock Teams - locks the teams into the games (teams can no longer be added or re-arranged) and presents the assignments to the instructions view
+// - Start Round - Does the same thing as it did before
 NEXT: drag and drop - assign teams, lock teams, start round
+https://medium.com/@ali.dev/how-to-add-drag-drop-in-vue-js-apps-the-easy-way-9417c819e20f
+https://github.com/Shopify/draggable/tree/master/src/Swappable
+https://github.com/Shopify/draggable/blob/master/examples/src/content/Droppable/UniqueDropzone/index.js
+
 unreadying a team should not wipe their score from the board
-NEXT: Actions need to be Rotate Teams, Lock Teams, Start Round
- - Rotate Teams rotates the active teams into active games, during this phase teams can no longer be added to the games, but teams can be re-arranged
- - Lock Teams - locks the teams into the games (teams can no longer be added or re-arranged) and presents the assignments to the instructions view
- - Start Round - Does the same thing as it did before
+make state for games that are inactive
+
+
 
 Game Statuses (should be available from a /status endpoint)
 idle - Idle, waiting to recieve order

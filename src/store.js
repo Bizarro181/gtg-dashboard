@@ -343,7 +343,7 @@ export default new Vuex.Store({
 				console.log( context.getters.teamById( game.teamNext ) );
 				axios({
 					method: 'post',
-					url: 'http://' + game.address + '/StartGame',
+					url: 'http://' + game.address + '/start',
 					data:{
 						teamId: game.teamNext,
 						members: context.getters.teamById( game.teamNext ).members,
