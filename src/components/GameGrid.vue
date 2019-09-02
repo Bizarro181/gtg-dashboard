@@ -60,7 +60,9 @@
 					<li v-for="game in activeGamesInOrder">{{ game.name }}</li>
 				</ul>
 				<ul class="teamsList">
-					<li v-for="team in teamsInGameOrder">{{ team.name }}</li>
+					<draggable v-model="teamsInGameOrder" group="teams">
+						<li v-for="team in teamsInGameOrder">{{ team.name }}</li>
+					</draggable>
 				</ul>
 			</div>
 		</div>
@@ -121,6 +123,8 @@ export default {
 			this.activeGamesInOrder.forEach(( game ) => {
 				if( game.teamNext !== "" ) {
 					this.teamsInGameOrder.push( this.teamById( game.teamNext ) );
+				} else {
+					this.teamsInGameOrder.push( { name: "empty", placeholder: true } )
 				}
 			});
 			this.showModal = !this.showModal;
