@@ -78,9 +78,7 @@ Need to sync teams to update scoreboard?
 // - Lock Teams - locks the teams into the games (teams can no longer be added or re-arranged) and presents the assignments to the instructions view
 // - Start Round - Does the same thing as it did before
 NEXT: drag and drop - assign teams, lock teams, start round
-https://medium.com/@ali.dev/how-to-add-drag-drop-in-vue-js-apps-the-easy-way-9417c819e20f
-https://github.com/Shopify/draggable/tree/master/src/Swappable
-https://github.com/Shopify/draggable/blob/master/examples/src/content/Droppable/UniqueDropzone/index.js
+https://sortablejs.github.io/Vue.Draggable/#/nested-example
 
 unreadying a team should not wipe their score from the board
 make state for games that are inactive

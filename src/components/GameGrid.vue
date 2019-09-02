@@ -5,7 +5,7 @@
 				<div class="gameSettingsToggle" v-on:click="toggleOpen( game.id )">*</div>
 				<p class="gameName">{{ game.name }}</p>
 				<p class="info" v-if="game.teamNext !== ''">
-					<span class="teamName" v-if="teamById( game.teamNext )">{{ teamById( game.teamNext ).name }}</span><br>
+					<span class="teamName" v-if="teamById( game.teamNext )">{{ teamById( game.teamNext ).name }} <span v-on:click="openModal()" class="moveText">Move</span></span><br>
 					<span class="stateLabel">Next Team</span>
 				</p>
 				<p class="info" v-if="game.teamCurrent !== ''">
@@ -54,11 +54,22 @@
 				</div>
 			</li>
 		</ul>
+		<div class="sortModal" v-if="showModal">
+			<div class="listsWrapper">
+				<ul class="gameList">
+					<li v-for="game in activeGamesInOrder">{{ game.name }}</li>
+				</ul>
+				<ul class="teamsList">
+					<li v-for="team in teamsInGameOrder">{{ team.name }}</li>
+				</ul>
+			</div>
+		</div>
 	</div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
+import draggable from 'vuedraggable';
 
 export default {
 	data(){
@@ -69,7 +80,9 @@ export default {
 				order: '',
 				active: true,
 				id: ''
-			}
+			},
+			showModal: false,
+			teamsInGameOrder:[]
 		}
 	},
 	methods:{
@@ -101,16 +114,27 @@ export default {
 		},
 		checkStatus( id ) {
 			this.$store.dispatch( 'checkStatus', id );
+		},
+		openModal(){
+			// Order the team by the games in order
+			this.teamsInGameOrder = [];
+			this.activeGamesInOrder.forEach(( game ) => {
+				if( game.teamNext !== "" ) {
+					this.teamsInGameOrder.push( this.teamById( game.teamNext ) );
+				}
+			});
+			this.showModal = !this.showModal;
 		}
 	},
 	computed:{
 		...mapGetters({
 			teamById: 'teamById',
 			games: 'gamesInOrder',
-			roundRunning: 'running'
+			roundRunning: 'running',
+			activeGamesInOrder: 'activeGamesInOrder'
+
 		})
 	},
-
 	created(){
 		this.$store.dispatch( 'fetchGames' ).then(() => {
 			this.games.forEach(( val ) => {
@@ -120,6 +144,9 @@ export default {
 				});
 			});
 		});		
+	},
+	components:{
+		draggable
 	}
 };
 </script>
@@ -194,6 +221,26 @@ export default {
 
 	.teamName{
 		text-transform:capitalize;
+		position:relative;
+
+		&:hover{
+			.moveText{
+				opacity:0.8;
+			}
+		}
+	}
+
+	.moveText{
+		text-transform:uppercase;
+		text-decoration:underline;
+		font-size:10%;
+		position:absolute;
+		opacity:0;
+		left:calc( 100% + 5px );
+		top:50%;
+		transform:translateY( -50% );
+		transition:opacity 200ms ease;
+		cursor:pointer;
 	}
 }
 .gameName{
@@ -307,5 +354,10 @@ export default {
 .settingActionItem{
 	padding:2px;
 	display:inline;
+}
+
+// Sort Modal
+.listsWrapper{
+	display:flex;
 }
 </style>
