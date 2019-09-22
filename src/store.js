@@ -384,15 +384,23 @@ export default new Vuex.Store({
 				method: 'post',
 				url: 'http://' + game.address + '/' + payload.route
 			}).then(( res ) => {
+				// If the game was inactive, set it to active
+				if( game.active == false ){
+					// Anything other than error is also active
+					context.commit( 'updateGameActive', game );
+				}
+				// Update the game status
 				context.commit( 'updateGameStatus', {
 					game: game,
 					status: res.data.status
 				});
+
 			}).catch(( error ) => {
 				context.commit( 'updateGameStatus', {
 					game: game,
 					status: 'error'
 				});
+				context.commit( 'updateGameInactive', game );
 			});
 		},
 		clear( context ){
@@ -514,6 +522,12 @@ export default new Vuex.Store({
 		},
 		updateLockTeams( state, payload ){
 			state.locked = payload;
+		},
+		updateGameInactive( state, game ){
+			game.active = false;
+		},
+		updateGameActive( state, game ){
+			game.active = true;
 		}
 	}
 })

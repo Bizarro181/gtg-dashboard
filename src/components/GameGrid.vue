@@ -1,7 +1,7 @@
 <template>
 	<div class="hello">
 		<ul class="gameGrid" v-bind:class="{ isRunning: roundRunning }">
-			<li class="gameItem" v-for="game in games" v-bind:class="{ open: isOpen(game.id)}">
+			<li class="gameItem" v-for="game in games" v-bind:class="{ open: isOpen(game.id), inactive: !game.active }">
 				<div class="gameSettingsToggle" v-on:click="toggleOpen( game.id )">*</div>
 				<p class="gameName">{{ game.name }}</p>
 				<p class="info" v-if="game.teamNext !== ''">
@@ -50,6 +50,18 @@
 							</button>
 						</li>
 					</ul>
+					<div class="activateButtons">
+						<button
+							v-on:click="setGameActiveState( game, false )"
+							v-if="game.active == true">
+							Deactivate
+						</button>
+						<button
+							v-on:click="setGameActiveState( game, true )"
+							v-if="game.active == false">
+							Activate
+						</button>
+					</div>
 					<div class="gameSettingsClose" v-on:click="toggleOpen( game.id )">X</div>
 				</div>
 			</li>
@@ -133,6 +145,13 @@ export default {
 				}
 			});
 			this.showModal = true;
+		},
+		setGameActiveState( game, state ){
+			if( state == true ) {
+				this.$store.commit( 'updateGameActive', game );
+			} else {
+				this.$store.commit( 'updateGameInactive', game )
+			}
 		},
 		saveAndCloseSort(){
 			this.showModal = false;
@@ -239,6 +258,15 @@ export default {
 		.gameSettings{
 			display:block;
 		}
+
+		&.inactive{
+			opacity:1;
+		}
+	}
+
+	&.inactive{
+		opacity:0.5;
+		background:#EDF2F7;
 	}
 }
 
@@ -392,6 +420,12 @@ export default {
 .settingActionItem{
 	padding:2px;
 	display:inline;
+}
+
+.activateButtons{
+	position:absolute;
+	bottom:10px;
+	left:10px;
 }
 
 // Sort Modal

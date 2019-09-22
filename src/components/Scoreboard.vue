@@ -8,7 +8,7 @@
 					<p class="gamesPlayed">{{ scoreCountById( team.id ) ? scoreCountById( team.id ) : 0 }} {{ gamesText( scoreCountById( team.id ) ) }} played</p>
 				</div>
 				<div class="scoreRight">
-					<p class="score" v-if="team.ready && scoresById( team.id )">{{ scoresById( team.id) }}</p>
+					<p class="score" v-if="( team.ready && scoresById( team.id ) ) || scoresById( team.id ) > 0">{{ scoresById( team.id) }}</p>
 				</div>
 			</li>
 		</ul>
