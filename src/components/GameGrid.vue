@@ -55,17 +55,22 @@
 			</li>
 		</ul>
 		<div class="sortModal" v-if="showModal">
+			<h2 class="modalTitle">Assign Teams</h2>
 			<div class="listsWrapper">
 				<ul class="gameList">
 					<li v-for="game in activeGamesInOrder">{{ game.name }}</li>
 				</ul>
 				<ul class="teamsList">
 					<draggable v-model="teamsInGameOrder" group="teams">
-						<li v-for="team in teamsInGameOrder">{{ team.name }}</li>
+						<li v-for="team in teamsInGameOrder" v-bind:class="{empty: team.name == 'empty'}">{{ team.name }}</li>
 					</draggable>
 				</ul>
 			</div>
+			<div class="buttons">
+				<button class="save" v-on:click="saveAndCloseSort()">Save</button>
+			</div>
 		</div>
+		<div class="sortModalOverlay" v-if="showModal"></div>
 	</div>
 </template>
 
@@ -127,7 +132,36 @@ export default {
 					this.teamsInGameOrder.push( { name: "empty", placeholder: true } )
 				}
 			});
-			this.showModal = !this.showModal;
+			this.showModal = true;
+		},
+		saveAndCloseSort(){
+			this.showModal = false;
+			// Clear clear out all active games
+			this.activeGamesInOrder.forEach((game) => {
+				this.$store.commit( 'clearTeamNextOnGame', game );
+			});
+			// Re-assign all the teams we have have
+			this.teamsInGameOrder.forEach((team, index) => {
+				let game = this.activeGamesInOrder[index];
+				// Clear out the gamecurrent on the team
+				this.$store.commit( 'clearGameNextOnTeam', team );
+				// Clear out this team's id on the game
+				this.$store.commit( 'clearTeamNextOnGame', game );
+				// If the team name is literally "empty" then it's the placeholder and we dont want to assign anything based on this
+				if ( team.name !== "empty" ) {
+					// Assign the next team to the game
+					this.$store.commit( 'assignGameToTeam', {
+						game: game,
+						teamNext: team.id
+					});
+					// Assign the next game to the team
+					this.$store.commit( 'assignNextTeamToGame', {
+						team: team,
+						gameNext: game.id
+					});
+				}
+			});
+			this.showModal = false;
 		}
 	},
 	computed:{
@@ -361,7 +395,86 @@ export default {
 }
 
 // Sort Modal
+.sortModalOverlay{
+	position:absolute;
+	top:0px;
+	left:0px;
+	bottom:0px;
+	right:0px;
+	background:rgba( #000000, 0.35 );
+	z-index:9;
+}
+.sortModal{
+	position:absolute;
+	top:15%;
+	left:50%;
+	transform:translateX( -50% );
+	background:#ffffff;
+	padding:10px 0px 0px;
+	border:1px solid #cacaca;
+	z-index:10;
+	border-radius:10px;
+	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+	overflow:hidden;
+}
+.teamsList{
+	margin:0px;
+	padding:0px;
+	list-style:none;
+
+	li{
+		background:#EDF2F7;
+		border-radius:3px;
+		padding:5px 10px;
+		font-weight:bold;
+		text-transform:capitalize;
+		margin-bottom:15px;
+		cursor:all-scroll;
+		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+
+		&.empty{
+			background:none;
+			font-style:italic;
+			font-weight:400;
+			box-shadow:none;
+			color:#A0AEC0;
+		}
+	}
+}
+.gameList{
+	margin:0px;
+	padding:0px;
+	list-style:none;
+
+	li{
+		padding:5px 15px 5px 5px;
+		margin-bottom:15px;
+		font-weight:bold;
+		text-align:left;
+
+	}
+}
+
 .listsWrapper{
 	display:flex;
+	margin:0px 50px 20px;
+}
+
+.buttons{
+	text-align:right;
+	padding:10px;
+	background:#EDF2F7;
+}
+
+.save{
+	background:#2C5282;
+	border:none;
+	font-weight:bold;
+	color:#ffffff;
+	padding:10px 20px;
+	border-radius:5px;
+	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+	display:inline-block;
+	cursor:pointer;
 }
 </style>

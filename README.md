@@ -58,6 +58,8 @@ Next:
 // -- 8/20/19
 // Update actions for starting a game to include a "Lock teams" state
 // Look into drag and drop libraries
+// -- 9/21/19
+// drag and drop - assign teams, lock teams, start round
 
 3:50 - 6:00
 
@@ -77,7 +79,7 @@ Need to sync teams to update scoreboard?
 // - Rotate Teams rotates the active teams into active games, during this phase teams can no longer be added to the games, but teams can be re-arranged
 // - Lock Teams - locks the teams into the games (teams can no longer be added or re-arranged) and presents the assignments to the instructions view
 // - Start Round - Does the same thing as it did before
-NEXT: drag and drop - assign teams, lock teams, start round
+// drag and drop - assign teams, lock teams, start round
 https://sortablejs.github.io/Vue.Draggable/#/nested-example
 
 unreadying a team should not wipe their score from the board

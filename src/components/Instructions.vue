@@ -68,10 +68,13 @@ export default {
 	flex-wrap:wrap;
 }
 .gridItem{
-	border:1px solid black;
 	width:calc( 50% - 22px );
 	margin:10px;
-	border:1px solid #cacaca;
+	background:#F7FAFC;
+	border-radius:10px;
+	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+	padding:20px;
+	box-sizing:border-box;
 }
 .teamName{
 	font-weight:bold;

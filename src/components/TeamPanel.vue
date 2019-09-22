@@ -194,6 +194,7 @@ export default {
 		font-style:inherit;
 		font-weight:bold;
 		color:inherit;
+		cursor:pointer;
 	}
 
 	.gamesPlayed{

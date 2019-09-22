@@ -240,6 +240,9 @@ export default new Vuex.Store({
 		},
 		lockTeams( context ) {
 			context.commit( 'updateLockTeams', true );
+			// Update teams and ready status to the remote
+			this._vm.$socket.emit( 'updateTeams', context.getters.teams );
+			this._vm.$socket.emit( 'updateReady', context.getters.ready );
 		},
 		nextRound( context ) {
 			const rotatingTeams = context.getters.rotatingTeams;
@@ -323,9 +326,6 @@ export default new Vuex.Store({
 			}
 			// Advance the round - we're ready to start
 			context.commit( 'roundReadyTrue' );
-			// Update teams to the remote
-			this._vm.$socket.emit( 'updateTeams', context.getters.teams );
-			this._vm.$socket.emit( 'updateReady', context.getters.ready );
 		},
 		startRound( context ) {
 			// Get all active games w/ teams
@@ -460,6 +460,12 @@ export default new Vuex.Store({
 		moveTeamToGame( state, payload ) {
 			payload.team.gameCurrent = payload.nextGame;
 			payload.team.gameNext = '';
+		},
+		clearTeamNextOnGame( state, payload ) {
+			payload.teamNext = '';
+		},
+		clearGameNextOnTeam( state, payload ) {
+			payload.gameNext = '';
 		},
 		clearTeamCurrentOnGame( state, payload ) {
 			payload.teamCurrent = '';
