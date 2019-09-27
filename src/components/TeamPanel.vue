@@ -4,7 +4,7 @@
 			<li v-for="( team, index ) in teams" class="teamItem" v-bind:class="{ ready: team.ready }">
 				<div class="teamInfo">
 					<div class="teamInfoWrapper">
-						<p class="teamName">{{ team.name }}{{ team.id }}</p>
+						<p class="teamName">{{ team.name }}</p>
 						<p class="points"><input class="inactiveTextArea" v-bind:value="scoresById( team.id ) ? scoresById( team.id ) : 0" v-on:blur="updateScore( team, $event )"> points</p>
 						<p class="gamesPlayed"><span class="bold">{{ scoreCountById( team.id ) ? scoreCountById( team.id ) : 0 }}</span> {{ gamesText( scoreCountById( team.id ) ) }} played</p>
 					</div>

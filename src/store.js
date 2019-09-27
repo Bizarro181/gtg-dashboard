@@ -394,7 +394,6 @@ export default new Vuex.Store({
 					game: game,
 					status: res.data.status
 				});
-
 			}).catch(( error ) => {
 				context.commit( 'updateGameStatus', {
 					game: game,

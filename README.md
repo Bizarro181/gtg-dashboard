@@ -56,10 +56,14 @@ Next:
 // Make edited scores reflect across dashboards
 // Fix "bug" about scores not working - stupid css issue
 // -- 8/20/19
-// Update actions for starting a game to include a "Lock teams" state
-// Look into drag and drop libraries
+// Feature: Update actions for starting a game to include a "Lock teams" state
+// Feature: Look into drag and drop libraries
 // -- 9/21/19
-// drag and drop - assign teams, lock teams, start round
+// Feature: drag and drop - assign teams, lock teams, start round
+// -- 9/22/19
+// Fix: unreadying a team should not wipe their score from the board
+// Feature: An errored game is now no longer active
+// Feature: A game can now be toggled between active and inactive
 
 3:50 - 6:00
 
@@ -80,10 +84,12 @@ Need to sync teams to update scoreboard?
 // - Lock Teams - locks the teams into the games (teams can no longer be added or re-arranged) and presents the assignments to the instructions view
 // - Start Round - Does the same thing as it did before
 // drag and drop - assign teams, lock teams, start round
-https://sortablejs.github.io/Vue.Draggable/#/nested-example
+// https://sortablejs.github.io/Vue.Draggable/#/nested-example
+// NEXT: unreadying a team should not wipe their score from the board
 
-unreadying a team should not wipe their score from the board
-make state for games that are inactive
+Button for "release team" if a game is inactive or error while a team is in it (or do this automatically)
+
+Feature: make state for games that are inactive
 
 
 
@@ -121,3 +127,11 @@ Greg: do we need to know in-game stats as they occur (time elapsed, score, etc)
 
 Health Check
 server needs enpoint for health check: degreded: and recieve a text message back of the current
+
+
+
+
+Use Dump for game statues
+Game will redirect to dump endpoint - read that.
+pause is also resume
+pase/pause/kill/dump

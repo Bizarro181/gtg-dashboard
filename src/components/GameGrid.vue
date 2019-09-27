@@ -24,7 +24,7 @@
 								Pause
 							</button>
 							<button 
-								v-on:click="talkToGame( game.id, 'resume' )"
+								v-on:click="talkToGame( game.id, 'pause' )"
 								v-if="game.status == 'paused'">
 								Resume
 							</button>
@@ -38,14 +38,14 @@
 						</li>
 						<li class="settingActionItem">
 							<button
-								v-on:click="talkToGame( game.id, 'reset' )"
+								v-on:click="talkToGame( game.id, 'kill' )"
 								v-bind:disabled="game.status !== 'running'">
 								Stop
 							</button>
 						</li>
 						<li class="settingActionItem">
 							<button
-								v-on:click="talkToGame( game.id, 'status' )">
+								v-on:click="talkToGame( game.id, 'dump' )">
 								Check Status
 							</button>
 						</li>
