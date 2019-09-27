@@ -143,17 +143,7 @@ export default new Vuex.Store({
 				team: context.getters.teamById( data.teamId ),
 				score: data.score
 			} );
-			// Have all the games that we sent start signals to completed?
-			if( context.state.sessionInfo.gamesCompleted == context.state.sessionInfo.gamesStarted ) {
-				context.commit( 'setRunningFalse' );
-				context.commit( 'resetGamesStarted' );
-				context.commit( 'resetGamesCompleted' );
-				context.commit( 'updateLockTeams', false );
-				// Update ready state
-				this._vm.$socket.emit( 'updateReady', context.getters.ready );
-				// update remote running state
-				this._vm.$socket.emit( 'updateRunning', context.getters.running );
-			}
+			context.dispatch( 'checkAllGamesCompleted' );
 		},
 		SOCKET_updateTeams( context, teams ) {
 			context.commit( 'setTeams', teams )
@@ -172,6 +162,19 @@ export default new Vuex.Store({
 				context.commit( 'roundReadyTrue' );
 			} else {
 				context.commit( 'roundReadyFalse' )
+			}
+		},
+		checkAllGamesCompleted( context ) {
+			// Have all the games that we sent start signals to completed?
+			if( context.state.sessionInfo.gamesCompleted == context.state.sessionInfo.gamesStarted ) {
+				context.commit( 'setRunningFalse' );
+				context.commit( 'resetGamesStarted' );
+				context.commit( 'resetGamesCompleted' );
+				context.commit( 'updateLockTeams', false );
+				// Update ready state
+				this._vm.$socket.emit( 'updateReady', context.getters.ready );
+				// update remote running state
+				this._vm.$socket.emit( 'updateRunning', context.getters.running );
 			}
 		},
 		fetchGames( context ) {
@@ -378,6 +381,21 @@ export default new Vuex.Store({
 			// 	context.commit( 'setRunningFalse' );
 			// }, 5000);
 		},
+		releaseTeam( context, game ) {
+			if( context.getters.running ) {
+				if ( game.teamCurrent !== "" ) {
+					let team = context.getters.teamById( game.teamCurrent );
+					// Clear out the team from the game
+					context.commit( 'clearTeamCurrentOnGame', game );
+					// Clear out the game from the team
+					context.commit( 'clearGameCurrentOnTeam', team );
+					// We dont want this game to hold up the round, so increment as if it were completed
+					context.commit( 'incrementGamesCompleted' );
+					// And check if that's all the games
+					context.dispatch( 'checkAllGamesCompleted' );
+				}
+			}
+		},
 		talkToGame( context, payload ) {
 			let game = context.getters.gameById( payload.id );
 			axios({
@@ -394,7 +412,12 @@ export default new Vuex.Store({
 					game: game,
 					status: res.data.status
 				});
+				// If we stopped a game in the middle of a round, we got to clear out the team
+				if ( payload.route == 'kill' ) {
+					context.dispatch( 'releaseTeam', game );
+				}
 			}).catch(( error ) => {
+				context.dispatch( 'releaseTeam', game );
 				context.commit( 'updateGameStatus', {
 					game: game,
 					status: 'error'

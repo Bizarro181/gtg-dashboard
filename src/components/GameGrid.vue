@@ -30,13 +30,6 @@
 							</button>
 						</li>
 						<li class="settingActionItem">
-							<button 
-								v-on:click="talkToGame( game.id, 'EndGame' )"
-								v-bind:disabled="game.status == 'idle' || game.status == 'ending'">
-								End Game
-							</button>
-						</li>
-						<li class="settingActionItem">
 							<button
 								v-on:click="talkToGame( game.id, 'kill' )"
 								v-bind:disabled="game.status !== 'running'">
@@ -117,7 +110,11 @@ export default {
 			let uiElement = this.ui.find(( element ) => {
 				return element.id == id;
 			});
-			return uiElement.menuOpen;
+			if ( typeof uiElement !== 'undefined' ) {
+				return uiElement.menuOpen;
+			} else {
+				return;
+			}
 		},
 		toggleOpen( id ){
 			let uiElementIndex = this.ui.findIndex((element) => {

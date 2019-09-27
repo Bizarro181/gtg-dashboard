@@ -64,6 +64,10 @@ Next:
 // Fix: unreadying a team should not wipe their score from the board
 // Feature: An errored game is now no longer active
 // Feature: A game can now be toggled between active and inactive
+// -- 9/27/19
+// Fix: get routes in line with the games' routes
+// Fix-ish: test out new routes on fake-game
+// Feature: A game that is stopped, or errored will now release the team and mark the game as "completed"
 
 3:50 - 6:00
 
@@ -86,8 +90,15 @@ Need to sync teams to update scoreboard?
 // drag and drop - assign teams, lock teams, start round
 // https://sortablejs.github.io/Vue.Draggable/#/nested-example
 // NEXT: unreadying a team should not wipe their score from the board
+// Button for "release team" if a game is inactive, errored, or stopped while a team is in it (or do this automatically)
+// Game will redirect to dump endpoint - read that.
+// pause is also resume
+// pause/pause/kill/dump
 
-Button for "release team" if a game is inactive or error while a team is in it (or do this automatically)
+Releasing a team doesnt make the team ready for the next round?
+
+Use Dump for game statues
+
 
 Feature: make state for games that are inactive
 
@@ -127,11 +138,3 @@ Greg: do we need to know in-game stats as they occur (time elapsed, score, etc)
 
 Health Check
 server needs enpoint for health check: degreded: and recieve a text message back of the current
-
-
-
-
-Use Dump for game statues
-Game will redirect to dump endpoint - read that.
-pause is also resume
-pase/pause/kill/dump
