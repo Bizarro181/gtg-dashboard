@@ -412,11 +412,31 @@ export default new Vuex.Store({
 					// Anything other than error is also active
 					context.commit( 'updateGameActive', game );
 				}
-				// Update the game status
-				context.commit( 'updateGameStatus', {
-					game: game,
-					status: res.data.status
-				});
+				// Temp
+				if( payload.route == "pause" && game.status == "running" ) {
+					// Update the game status
+					context.commit( 'updateGameStatus', {
+						game: game,
+						status: 'paused'
+					});
+				} else if( payload.route == "pause" && game.status == "paused" ) {
+					// Update the game status
+					context.commit( 'updateGameStatus', {
+						game: game,
+						status: 'running'
+					});
+				} else if( payload.route == "kill" ) {
+					// Update the game status
+					context.commit( 'updateGameStatus', {
+						game: game,
+						status: 'idle'
+					});
+				}
+				// END TEMP - Update the game status
+				// context.commit( 'updateGameStatus', {
+				// 	game: game,
+				// 	status: res.data.status
+				// });
 				// If we stopped a game in the middle of a round, we got to clear out the team
 				if ( payload.route == 'kill' ) {
 					context.dispatch( 'releaseTeam', game );
