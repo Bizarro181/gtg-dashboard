@@ -96,6 +96,10 @@ Need to sync teams to update scoreboard?
 // pause/pause/kill/dump
 
 Releasing a team doesnt make the team ready for the next round?
+Establish a failsafe for if we get no status response - assume OK or the expected response for now
+Allow editing of game address
+Allow adding of game logo
+update gets/posts of routes and playerCount
 
 Use Dump for game statues
 

@@ -349,13 +349,18 @@ export default new Vuex.Store({
 					url: 'http://' + game.address + '/start',
 					data:{
 						teamId: game.teamNext,
-						members: context.getters.teamById( game.teamNext ).members,
+						playerCount: context.getters.teamById( game.teamNext ).members,
 						teamName: context.getters.teamById( game.teamNext ).name
 					}
 				}).then(( res ) => {
+					// context.commit( 'updateGameStatus', {
+					// 	game: game,
+					// 	status: res.data.status
+					// });
+					// Assume a game that starts is running
 					context.commit( 'updateGameStatus', {
 						game: game,
-						status: res.data.status
+						status: 'running'
 					});
 				});
 				context.commit( 'startSingleGame', {
@@ -399,7 +404,7 @@ export default new Vuex.Store({
 		talkToGame( context, payload ) {
 			let game = context.getters.gameById( payload.id );
 			axios({
-				method: 'post',
+				method: 'get',
 				url: 'http://' + game.address + '/' + payload.route
 			}).then(( res ) => {
 				// If the game was inactive, set it to active
