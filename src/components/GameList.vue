@@ -4,6 +4,7 @@
 		<ul class="gamesList">
 			<li class="gameItem" v-for="game in games">
 				<p class="gameName">{{ game.name }}</p>
+				<input :value="game.address" v-on:input="updateAddress( game.id, $event )">
 				<div class="actions">
 					<button v-on:click="removeGame(game.id)">Remove</button>
 				</div>
@@ -44,7 +45,13 @@ export default {
 			this.gameData.address = 'localhost:2021';
 		},
 		removeGame( id ){
-			this.$store.dispatch( 'removeGame', id );
+			this.$store.dispatch( 'removeGame', id);
+		},
+		updateAddress( id, event ) {
+			this.$store.dispatch( 'updateGameAddress', {
+				gameId: id,
+				value: event.target.value
+			});
 		}
 	},
 	computed:{

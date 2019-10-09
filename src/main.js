@@ -4,10 +4,12 @@ import router from './router'
 import store from './store'
 import VueSocketIO from 'vue-socket.io'
 
+console.log('env', JSON.stringify(process.env))
+
 // This is the dashboard server address
 Vue.use( new VueSocketIO({
 		debug: true,
-		connection: 'http://192.168.1.7:3030',
+		connection: process.env.VUE_APP_REMOTE_URL,
 		// connection: 'http://localhost:3030',
 		vuex:{
 			store,

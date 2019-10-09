@@ -1,6 +1,6 @@
 <template>
-	<div class="teamPanel">
-		<h1>Leaderboard</h1>
+	<div class="leaderboard">
+		<h1 class="leaderboardHeader">Leaderboard</h1>
 		<ul class="teamsList">
 			<li v-for="( team, index ) in teamsSortedByScore" class="teamItem" v-bind:class="{ ready: team.ready }">
 				<div class="scoreLeft">
@@ -40,12 +40,45 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+@font-face {
+    font-family: 'VT323';
+    src: url('~/fonts/vt323-regular-webfont.woff2') format('woff2'),
+         url('~/fonts/vt323-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+.leaderboardHeader{
+	font-size:50px;
+	font-weight:normal;
+}
+.leaderboard{
+	font-family:'VT323';
+	background:#2c3e50;
+	color:#ffffff;
+	text-shadow:0px 0px 4px rgba( #ffffff, 0.5 );
+
+	&:before{
+		content:" ";
+		display:block;
+		position:absolute;
+		top:0;
+		left:0;
+		bottom:0;
+		right:0;
+		background:linear-gradient(transparentize(#000,1) 50%, transparentize(darken(#000,10),0.75) 50%), linear-gradient(90deg,transparentize(#ff0000,0.94),transparentize(#00ff00,0.85),transparentize(#0000ff,0.94));
+		z-index:2;
+		background-size:100% 3px, 1px 100%;
+		pointer-events:none;
+		opacity:0.5;
+	}
+}
 .teamsList{
 	list-style:none;
 	margin:0px auto;
 	padding:0px;
 	width:100%;
 	max-width:600px;
+	
 }
 .teamItem{
 	display:flex;
@@ -65,7 +98,7 @@ export default {
 	margin:0px;
 	text-align:left;
 	text-transform:capitalize;
-	font-size:34px;
+	font-size:50px;
 }
 
 .id{
@@ -74,8 +107,7 @@ export default {
 }
 
 .score{
-	font-weight:bold;
-	font-size:30px;
+	font-size:50px;
 }
 
 p{
@@ -83,7 +115,7 @@ p{
 }
 
 .gamesPlayed{
-	font-size:10px;
+	font-size:20px;
 	font-style:italic;
 }
 </style>

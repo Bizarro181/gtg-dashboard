@@ -194,7 +194,24 @@ export default new Vuex.Store({
 					this._vm.$socket.emit( 'updateGames', context.getters.gamesInOrder );
 				});
 			});
-			
+		},
+		updateGameAddress( context, payload ) {
+			let game = context.getters.gameById( payload.gameId );
+			fb.gamesCollection.where( 'id', '==', payload.gameId )
+				.get()
+				.then(querySnapshot => {
+					querySnapshot.forEach( doc => {
+						fb.gamesCollection.doc( doc.id )
+						.update({
+							address: payload.value
+						}).then(() => {
+							context.commit( 'updateGame', {
+								game: game,
+								value: payload.value
+							});
+						})
+					})
+				});
 		},
 		removeGame( context, id ) {
 			fb.gamesCollection.where( 'id', '==', id )
@@ -490,6 +507,9 @@ export default new Vuex.Store({
 		},
 		addGame(state, game) {
 			state.games.push( game );
+		},
+		updateGame(state, payload ){
+			payload.game.address = payload.value;
 		},
 		setGames(state, games) {
 			Vue.set( state, 'games', [...games] );

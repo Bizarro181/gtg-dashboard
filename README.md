@@ -68,6 +68,16 @@ Next:
 // Fix: get routes in line with the games' routes
 // Fix-ish: test out new routes on fake-game
 // Feature: A game that is stopped, or errored will now release the team and mark the game as "completed"
+// -- 10/1/19
+// update gets/posts of routes and playerCount
+// Establish a failsafe for if we get no status response - assume OK or the expected response for now
+// -- 10/8/19
+// QOL: Add .env (dashboard-server address)
+// QOL: Allow editing of game address
+
+Tool: Modify update-timer script to work for dashboard
+Improvement: Style for the leaderboard
+Bugfix: Releasing a team doesnt make the team ready for the next round?
 
 3:50 - 6:00
 
@@ -94,17 +104,10 @@ Need to sync teams to update scoreboard?
 // Game will redirect to dump endpoint - read that.
 // pause is also resume
 // pause/pause/kill/dump
-
-Releasing a team doesnt make the team ready for the next round?
-Establish a failsafe for if we get no status response - assume OK or the expected response for now
-Allow editing of game address
 Allow adding of game logo
-update gets/posts of routes and playerCount
-
 Use Dump for game statues
-
-
 Feature: make state for games that are inactive
+Documentation
 
 
 
