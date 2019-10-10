@@ -72,7 +72,7 @@ export default new Vuex.Store({
 		},
 		newTeams( state, getters ) {
 			return getters.readyTeams.filter(( team ) => {
-				return team.gameStarted == '';
+				return team.gameStarted == '' || team.bounced == true;
 			});
 		},
 		rotatingTeams( state, getters ) {
@@ -342,6 +342,11 @@ export default new Vuex.Store({
 						game: games[0],
 						teamNext: team.id
 					});
+					// Update their bounced flag
+					context.commit( 'setBouncedOnTeam', {
+						team: team,
+						bounced: false
+					});
 				});
 			}
 			// Advance the round - we're ready to start
@@ -411,6 +416,16 @@ export default new Vuex.Store({
 					context.commit( 'clearTeamCurrentOnGame', game );
 					// Clear out the game from the team
 					context.commit( 'clearGameCurrentOnTeam', team );
+					// Set a flag to let us know the team was bounced (this let's them back in)
+					context.commit( 'setBouncedOnTeam', {
+						team: team,
+						bounced: true
+					});
+					// As a fail-safe, un-ready them
+					context.commit( 'setTeamReadyStatus', {
+						team: team,
+						status: false
+					});
 					// We dont want this game to hold up the round, so increment as if it were completed
 					context.commit( 'incrementGamesCompleted' );
 					// And check if that's all the games
@@ -547,6 +562,9 @@ export default new Vuex.Store({
 		},
 		clearGameCurrentOnTeam( state, payload ) {
 			payload.gameCurrent = '';
+		},
+		setBouncedOnTeam( state, payload ) {
+			payload.team.bounced = payload.bounced;
 		},
 		roundReadyTrue( state ) {
 			state.ready = true;

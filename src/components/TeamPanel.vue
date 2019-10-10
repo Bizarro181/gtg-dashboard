@@ -76,6 +76,11 @@ export default {
 					team: this.teams[index],
 					status: false
 				});
+				// Treat them as bounced so they can re-enter
+				this.$store.commit( 'setBouncedOnTeam', {
+					team: this.teams[index],
+					bounced: true
+				});
 			}
 		},
 		generateTeamName(){

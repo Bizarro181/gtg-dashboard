@@ -74,10 +74,20 @@ Next:
 // -- 10/8/19
 // QOL: Add .env (dashboard-server address)
 // QOL: Allow editing of game address
+// Tool: Modify update-timer script to work for dashboard
+// Improvement: Style for the leaderboard
+// -- 10/9/19
+// Bugfix: Releasing a team doesnt make the team ready for the next round
+// Bugfix: unreadying a team doesnt allow them to re-enter
 
-Tool: Modify update-timer script to work for dashboard
-Improvement: Style for the leaderboard
-Bugfix: Releasing a team doesnt make the team ready for the next round?
+Leaderboard styles
+Allow adding of game logo
+Use Dump for game statues
+Feature: make state for games that are inactive
+Documentation
+Refactor this behemoth 
+
+192.168.1.11:5000
 
 3:50 - 6:00
 
@@ -104,10 +114,7 @@ Need to sync teams to update scoreboard?
 // Game will redirect to dump endpoint - read that.
 // pause is also resume
 // pause/pause/kill/dump
-Allow adding of game logo
-Use Dump for game statues
-Feature: make state for games that are inactive
-Documentation
+
 
 
 

@@ -38,6 +38,15 @@ export default {
 };
 </script>
 
+<style lang="scss">
+.scores{
+	background-color:#2c3e50;
+	height:100vh;
+	#nav{
+		display:none;
+	}
+}
+</style>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 @font-face {
@@ -48,8 +57,10 @@ export default {
     font-style: normal;
 }
 .leaderboardHeader{
-	font-size:50px;
+	font-size:55px;
 	font-weight:normal;
+	text-transform:uppercase;
+	letter-spacing:5px;
 }
 .leaderboard{
 	font-family:'VT323';
@@ -84,14 +95,9 @@ export default {
 	display:flex;
 	align-items:center;
 	justify-content:space-between;
-	border:1px solid #cacaca;
 	border-bottom:none;
 	padding:20px;
 	text-align:left;
-
-	&:last-child{
-		border-bottom:1px solid #cacaca;
-	}
 }
 .teamName{
 	font-weight:500;
