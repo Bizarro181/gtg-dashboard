@@ -373,6 +373,9 @@ export default new Vuex.Store({
 						team_id: game.teamNext,
 						team_playerCount: context.getters.teamById( game.teamNext ).members,
 						team_name: context.getters.teamById( game.teamNext ).name
+					},
+					headers: {
+    					'Content-Type': 'application/x-www-form-urlencoded'
 					}
 				}).then(( res ) => {
 					// context.commit( 'updateGameStatus', {
