@@ -370,9 +370,9 @@ export default new Vuex.Store({
 					method: 'post',
 					url: 'http://' + game.address + '/start',
 					data:{
-						teamId: game.teamNext,
-						playerCount: context.getters.teamById( game.teamNext ).members,
-						teamName: context.getters.teamById( game.teamNext ).name
+						team_id: game.teamNext,
+						team_playerCount: context.getters.teamById( game.teamNext ).members,
+						team_name: context.getters.teamById( game.teamNext ).name
 					}
 				}).then(( res ) => {
 					// context.commit( 'updateGameStatus', {
