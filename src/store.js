@@ -366,28 +366,49 @@ export default new Vuex.Store({
 				// Make a call to the "game"
 				console.log( game.teamNext );
 				console.log( context.getters.teamById( game.teamNext ) );
-				axios({
-					method: 'post',
-					url: 'http://' + game.address + '/start',
-					data:{
-						team_id: game.teamNext,
-						team_playerCount: context.getters.teamById( game.teamNext ).members,
-						team_name: context.getters.teamById( game.teamNext ).name
-					},
-					headers: {
-    					'Content-Type': 'application/x-www-form-urlencoded'
-					}
-				}).then(( res ) => {
-					// context.commit( 'updateGameStatus', {
-					// 	game: game,
-					// 	status: res.data.status
-					// });
+				let body = {
+					team_id: game.teamNext,
+					team_playerCount: context.getters.teamById( game.teamNext ).members,
+					team_name: context.getters.teamById( game.teamNext ).name
+				};
+				let data = new FormData();
+				data.append('team_id',game.teamNext );
+				data.append('team_playerCount',context.getters.teamById( game.teamNext ).members );
+				data.append('team_name',context.getters.teamById( game.teamNext ).name );
+				axios.post('http://' + game.address + '/start', data)
+					.then(( res ) => {
+					context.commit( 'updateGameStatus', {
+						game: game,
+						status: res.data.status
+					});
 					// Assume a game that starts is running
 					context.commit( 'updateGameStatus', {
 						game: game,
 						status: 'running'
 					});
 				});
+				// axios({
+				// 	method: 'post',
+				// 	url: 'http://' + game.address + '/start',
+				// 	data:{
+				// 		team_id: game.teamNext,
+				// 		team_playerCount: context.getters.teamById( game.teamNext ).members,
+				// 		team_name: context.getters.teamById( game.teamNext ).name
+				// 	},
+				// 	headers: { 
+				// 		"Content-Type": "application/x-www-form-urlencoded"
+				// 	}
+				// }).then(( res ) => {
+				// 	// context.commit( 'updateGameStatus', {
+				// 	// 	game: game,
+				// 	// 	status: res.data.status
+				// 	// });
+				// 	// Assume a game that starts is running
+				// 	context.commit( 'updateGameStatus', {
+				// 		game: game,
+				// 		status: 'running'
+				// 	});
+				// });
 				context.commit( 'startSingleGame', {
 					game: game,
 					nextTeam: game.teamNext
