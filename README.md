@@ -80,6 +80,7 @@ Next:
 // Bugfix: Releasing a team doesnt make the team ready for the next round
 // Bugfix: unreadying a team doesnt allow them to re-enter
 
+Cant stop/pause running game (because it doesnt have a status?)
 Leaderboard styles
 Allow adding of game logo
 Use Dump for game statues
