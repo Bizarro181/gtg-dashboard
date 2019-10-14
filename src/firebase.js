@@ -2,13 +2,13 @@ import { firebase } from "@firebase/app";
 import "@firebase/firestore";
 
 const firebaseApp = firebase.initializeApp({
-	apiKey: "AIzaSyB70wCTCOJJlVgjNJowRfOJEdtZf67AwCE",
-    authDomain: "gtg-dashboard.firebaseapp.com",
-    databaseURL: "https://gtg-dashboard.firebaseio.com",
-    projectId: "gtg-dashboard",
-    storageBucket: "gtg-dashboard.appspot.com",
-    messagingSenderId: "836676229202",
-    appId: "1:836676229202:web:ab9b57ce925fbeea"
+	apiKey: process.env.VUE_APP_FB_apiKey,
+    authDomain: process.env.VUE_APP_FB_authDomain,
+    databaseURL: process.env.VUE_APP_FB_databaseURL,
+    projectId: process.env.VUE_APP_FB_projectId,
+    storageBucket: process.env.VUE_APP_FB_storageBucket,
+    messagingSenderId: process.env.VUE_APP_FB_messagingSenderId,
+    appId: process.env.VUE_APP_FB_appId
 });
 
 const firestore = firebaseApp.firestore();

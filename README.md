@@ -79,10 +79,14 @@ Next:
 // -- 10/9/19
 // Bugfix: Releasing a team doesnt make the team ready for the next round
 // Bugfix: unreadying a team doesnt allow them to re-enter
+// -- 10/14/19
+// QOL: add firebase config to .env and make "dev" app in firebase
+// Update: Leaderboard styles
+// Update: Allow adding of game logo
 
 Cant stop/pause running game (because it doesnt have a status?)
-Leaderboard styles
-Allow adding of game logo
+Get CORS back 
+
 Use Dump for game statues
 Feature: make state for games that are inactive
 Documentation

@@ -5,6 +5,10 @@
 			<li class="gameItem" v-for="game in games">
 				<p class="gameName">{{ game.name }}</p>
 				<input :value="game.address" v-on:input="updateAddress( game.id, $event )">
+				<select type="text">
+					<option value=""> - Logo -</option>
+					<option v-for="(name, slug) in logos" :value="slug" :selected="slug == game.logo">{{ name }}</option>
+				</select>
 				<div class="actions">
 					<button v-on:click="removeGame(game.id)">Remove</button>
 				</div>
@@ -14,6 +18,10 @@
 			<input type="text" v-model="gameData.name" placeholder="Game Name" />
 			<input type="text" v-model="gameData.address" placeholder="Address" />
 			<input type="text" v-model="gameData.order" placeholder="Order" />
+			<select type="text" v-model="gameData.logo">
+				<option value=""> - Logo -</option>
+				<option v-for="(name, slug) in logos" :value="slug">{{ name }}</option>
+			</select>
 			<button type="submit">Add</button>
 		</form>
 	</div>
@@ -28,7 +36,13 @@ export default {
 				order: '',
 				active: true,
 				id: '',
-				address: 'localhost:2021'
+				address: 'localhost:2021',
+				logo: '',
+			},
+			logos:{
+				fact_attack_pixel: "Fact Attack",
+				power_surge_pixel: "Power Surge",
+				manhunt_pixel: "Manhunt"
 			}
 		}
 	},
@@ -38,11 +52,13 @@ export default {
 				name: this.gameData.name,
 				order: this.gameData.order,
 				active: true,
-				address: this.gameData.address
+				address: this.gameData.address,
+				logo: this.gameData.logo
 			});
 			this.gameData.name = '';
 			this.gameData.order = '';
 			this.gameData.address = 'localhost:2021';
+			this.gameData.logo = '';
 		},
 		removeGame( id ){
 			this.$store.dispatch( 'removeGame', id);
