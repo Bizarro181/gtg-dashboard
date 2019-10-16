@@ -247,7 +247,8 @@ export default new Vuex.Store({
 			// Get the creation timestamp
 			const created = Date.now();
 			// Generate a UUID for the team and set some default values
-			team.id = uuidv3( team.name + created, teamNamespace );
+			//team.id = uuidv3( team.name + created, teamNamespace );
+			team.id = 'testid' + Math.floor( Math.random() * 10 );
 			team.ready = false;
 			team.gameStarted = '';
 			team.gameCurrent = '';
