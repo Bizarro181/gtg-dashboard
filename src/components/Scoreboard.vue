@@ -39,7 +39,7 @@ export default {
 </script>
 
 <style lang="scss">
-.leaderboard{
+.scores{
 	background-color:#2c3e50;
 	height:100vh;
 	#nav{
