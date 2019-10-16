@@ -54,7 +54,7 @@ export default {
 		left:0;
 		bottom:0;
 		right:0;
-		background:linear-gradient(transparentize(#000,1) 50%, transparentize(darken(#000,10),0.75) 50%), linear-gradient(90deg,transparentize(#ff0000,0.94),transparentize(#00ff00,0.85),transparentize(#0000ff,0.94));
+		background:linear-gradient(transparentize(#000,1) 50%, transparentize(darken(#000,10),0.75) 50%), linear-gradient(90deg,transparentize(#ff0000,0.94),transparentize(#000000,0.85),transparentize(#0000ff,0.94));
 		z-index:2;
 		background-size:100% 3px, 1px 100%;
 		pointer-events:none;

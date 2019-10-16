@@ -74,7 +74,7 @@ export default {
 		left:0;
 		bottom:0;
 		right:0;
-		background:linear-gradient(transparentize(#000,1) 50%, transparentize(darken(#000,10),0.75) 50%), linear-gradient(90deg,transparentize(#ff0000,0.94),transparentize(#00ff00,0.85),transparentize(#0000ff,0.94));
+		background:linear-gradient(transparentize(#000,1) 50%, transparentize(darken(#000,10),0.75) 50%), linear-gradient(90deg,transparentize(#ff0000,0.94),transparentize(#000000,0.85),transparentize(#0000ff,0.94));
 		z-index:2;
 		background-size:100% 3px, 1px 100%;
 		pointer-events:none;
@@ -96,6 +96,7 @@ export default {
 	text-shadow:0px 0px 4px rgba( #ffffff, 0.5 );
 	font-size:60px;
 	font-family:'VT323';
+	font-weight:400;
 }
 .grid{
 	list-style:none;
@@ -120,7 +121,7 @@ export default {
 	width:35%;
 }
 .teamName{
-	font-weight:bold;
+	font-weight:400;
 	font-size:50px;
 	text-transform:capitalize;
 	color:#ffffff;
