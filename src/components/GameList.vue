@@ -42,7 +42,12 @@ export default {
 			logos:{
 				fact_attack_pixel: "Fact Attack",
 				power_surge_pixel: "Power Surge",
-				manhunt_pixel: "Manhunt"
+				manhunt_pixel: "Manhunt",
+				feed_the_animals: "Feed the Animals",
+				boom_work_pixel: "Boom Work",
+				order_up_pixel: "Order Up",
+				alien_invasion_pixel: "Alien Invasion",
+				disco_dots_pixel: "Disco Dots"
 			}
 		}
 	},

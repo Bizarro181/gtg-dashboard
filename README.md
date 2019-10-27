@@ -83,6 +83,11 @@ Next:
 // QOL: add firebase config to .env and make "dev" app in firebase
 // Update: Leaderboard styles
 // Update: Allow adding of game logo
+// -- 10/15/19
+// Test integration from game => dashboard for score reporting
+// Fix up instructions a bit
+// -- 10/27/19
+// Add more logos
 
 Cant stop/pause running game (because it doesnt have a status?)
 Get CORS back 
@@ -90,11 +95,11 @@ Get CORS back
 Use Dump for game statues
 Feature: make state for games that are inactive
 Documentation
+write tests (lol)
 Refactor this behemoth 
 
-192.168.1.11:5000
-
-3:50 - 6:00
+Add games completed with checks
+Make refreshes persist data - https://vuex.vuejs.org/api/#subscribe, https://www.mikestreety.co.uk/blog/vue-js-using-localstorage-with-the-vuex-store
 
 
 Cant "ready" a team if session "ready" is true
